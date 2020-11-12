@@ -32,11 +32,11 @@ class _HomeState extends State<Home> {
           backgroundColor: Colors.white,
           key: _bottomNavigationKey,
           items: <Widget>[
-            Icon(Icons.add, size: 30),
-            Icon(Icons.favorite, size: 30),
+            Image.asset('assets/icon/stethoscope.png', width: 30,),
+            Icon(Icons.assignment_outlined, size: 30),
             Icon(Icons.home, size: 30),
-            Icon(Icons.compare_arrows, size: 30),
-            Icon(Icons.exit_to_app, size: 30),
+            Icon(Icons.library_add, size: 30),
+            Icon(Icons.account_circle, size: 30),
           ],
           index: 2,
           animationDuration: Duration(
