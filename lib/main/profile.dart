@@ -2,16 +2,16 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/main.dart';
 
-class Home extends StatefulWidget {
+class Profile extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _ProfileState createState() => _ProfileState();
 }
-class _HomeState extends State<Home> {
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new Center(
-        child: new Text('Home Page'),
+        child: new Text('Profile Page'),
       ),
 
     );
