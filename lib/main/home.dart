@@ -10,6 +10,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: AppBar(
+        title: const Text('Halo, Aric'),
+        automaticallyImplyLeading: false,
+      ),
       body: new Center(
         child: new Text('Home Page'),
       ),

@@ -10,6 +10,10 @@ class _ConsuleState extends State<Consule> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: AppBar(
+        title: const Text('Halo, Aric'),
+        automaticallyImplyLeading: false,
+      ),
       body: new Center(
         child: new Text('Consule Page'),
       ),
