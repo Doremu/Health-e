@@ -31,8 +31,8 @@ class LoginPage extends StatelessWidget {
   Widget _iconLogin() {
     return Image.asset(
       "assets/images/logo.png",
-      width: 350.0,
-      height: 350.0,
+      width: 300.0,
+      height: 300.0,
     );
   }
 
