@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
 import 'package:healthe/login/login.dart';
+import 'package:healthe/login/validation.dart';
 import 'package:healthe/main/home.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatelessWidget with Validation{
+  final formKey = GlobalKey<FormState>();
 
-  static const routeName = "/register";
+  String firstName='';
+  String lastName='';
+  String username='';
+  String email='';
+  String password='';
+  String retypePassword='';
 
   @override
   Widget build(BuildContext context) {
@@ -49,143 +56,171 @@ class RegisterPage extends StatelessWidget {
   }
 
   Widget _textField() {
-    return Column(
-      children: <Widget>[
-        Padding(padding: EdgeInsets.only(top: 12.0),),
-        TextFormField(
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: ColorPalette.underlineTextField,
-                  width: 1.5
+    return Form(
+      key: formKey,
+      child: Column(
+        children: <Widget>[
+          Padding(padding: EdgeInsets.only(top: 12.0),),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: ColorPalette.underlineTextField,
+                    width: 1.5
+                ),
               ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.white,
-                  width: 3.0
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 3.0
+                ),
               ),
+              hintText: "First Name",
+              hintStyle: TextStyle(color: ColorPalette.hintColor),
             ),
-            hintText: "First Name",
-            hintStyle: TextStyle(color: ColorPalette.hintColor),
+            onSaved: (String value){
+              firstName = value;
+            },
+            style: TextStyle(color: Colors.white),
+            autofocus: false,
           ),
-          style: TextStyle(color: Colors.white),
-          autofocus: false,
-        ),
-        Padding(padding: EdgeInsets.only(top: 12.0),),
-        TextFormField(
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: ColorPalette.underlineTextField,
-                  width: 1.5
+          Padding(padding: EdgeInsets.only(top: 12.0),),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: ColorPalette.underlineTextField,
+                    width: 1.5
+                ),
               ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.white,
-                  width: 3.0
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 3.0
+                ),
               ),
+              hintText: "Last Name",
+              hintStyle: TextStyle(color: ColorPalette.hintColor),
             ),
-            hintText: "Full Name",
-            hintStyle: TextStyle(color: ColorPalette.hintColor),
+            onSaved: (String value){
+              lastName = value;
+            },
+            style: TextStyle(color: Colors.white),
+            autofocus: false,
           ),
-          style: TextStyle(color: Colors.white),
-          autofocus: false,
-        ),
-        Padding(padding: EdgeInsets.only(top: 12.0),),
-        TextFormField(
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: ColorPalette.underlineTextField,
-                  width: 1.5
+          Padding(padding: EdgeInsets.only(top: 12.0),),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: ColorPalette.underlineTextField,
+                    width: 1.5
+                ),
               ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.white,
-                  width: 3.0
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 3.0
+                ),
               ),
+              hintText: "Username",
+              hintStyle: TextStyle(color: ColorPalette.hintColor),
             ),
-            hintText: "Username",
-            hintStyle: TextStyle(color: ColorPalette.hintColor),
+            onSaved: (String value){
+              username = value;
+            },
+            style: TextStyle(color: Colors.white),
+            autofocus: false,
           ),
-          style: TextStyle(color: Colors.white),
-          autofocus: false,
-        ),
-        Padding(padding: EdgeInsets.only(top: 12.0),),
-        TextFormField(
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: ColorPalette.underlineTextField,
-                  width: 1.5
+          Padding(padding: EdgeInsets.only(top: 12.0),),
+          TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: ColorPalette.underlineTextField,
+                    width: 1.5
+                ),
               ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.white,
-                  width: 3.0
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 3.0
+                ),
               ),
+              hintText: "Email",
+              hintStyle: TextStyle(color: ColorPalette.hintColor),
             ),
-            hintText: "Email",
-            hintStyle: TextStyle(color: ColorPalette.hintColor),
+            onSaved: (String value){
+              email = value;
+            },
+            style: TextStyle(color: Colors.white),
+            autofocus: false,
           ),
-          style: TextStyle(color: Colors.white),
-          autofocus: false,
-        ),
-        Padding(padding: EdgeInsets.only(top: 12.0),),
-        TextFormField(
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: ColorPalette.underlineTextField,
-                  width: 1.5
+          Padding(padding: EdgeInsets.only(top: 12.0),),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: ColorPalette.underlineTextField,
+                    width: 1.5
+                ),
               ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.white,
-                  width: 3.0
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 3.0
+                ),
               ),
+              hintText: "Password",
+              hintStyle: TextStyle(color: ColorPalette.hintColor),
             ),
-            hintText: "Password",
-            hintStyle: TextStyle(color: ColorPalette.hintColor),
+            onSaved: (String value){
+              password = value;
+            },
+            style: TextStyle(color: Colors.white),
+            obscureText: true,
+            autofocus: false,
           ),
-          style: TextStyle(color: Colors.white),
-          obscureText: true,
-          autofocus: false,
-        ),
-        Padding(padding: EdgeInsets.only(top: 12.0),),
-        TextFormField(
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: ColorPalette.underlineTextField,
-                  width: 1.5
+          Padding(padding: EdgeInsets.only(top: 12.0),),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: ColorPalette.underlineTextField,
+                    width: 1.5
+                ),
               ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.white,
-                  width: 3.0
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 3.0
+                ),
               ),
+              hintText: "Retype Password",
+              hintStyle: TextStyle(color: ColorPalette.hintColor),
             ),
-            hintText: "Retype Password",
-            hintStyle: TextStyle(color: ColorPalette.hintColor),
+            onSaved: (String value){
+              retypePassword = value;
+            },
+            validator: (String value) {
+              if(password != value) {
+                return 'Password tidak sama';
+              }
+              return null;
+            },
+            style: TextStyle(color: Colors.white),
+            obscureText: true,
+            autofocus: false,
           ),
-          style: TextStyle(color: Colors.white),
-          obscureText: true,
-          autofocus: false,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -208,7 +243,10 @@ class RegisterPage extends StatelessWidget {
             ),
           ),
           onTap: () {
-            Navigator.pushNamed(context, "/");
+            if(formKey.currentState.validate()){
+              formKey.currentState.save();
+              Navigator.pushNamed(context, "/");
+            }
           },
         ),
         Padding(padding: EdgeInsets.only(top: 16.0),),
