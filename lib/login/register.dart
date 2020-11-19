@@ -245,8 +245,9 @@ class RegisterPage extends StatelessWidget with Validation{
             ),
           ),
           onTap: () async {
-            // if(formKey.currentState.validate()){
-              formKey.currentState.save();
+            formKey.currentState.save();
+            if(formKey.currentState.validate()){
+
               try {
                 final newUser = await _auth.createUserWithEmailAndPassword(
                     email: email, password: password);
@@ -262,7 +263,7 @@ class RegisterPage extends StatelessWidget with Validation{
                 print(e);
               }
               Navigator.pushNamed(context, "/");
-            // }
+            }
           },
         ),
         Padding(padding: EdgeInsets.only(top: 16.0),),
