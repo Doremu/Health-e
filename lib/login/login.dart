@@ -146,7 +146,6 @@ class LoginPage extends StatelessWidget {
               try {
                 final newUser = await _auth.signInWithEmailAndPassword(
                     email: email, password: password);
-
                 if (newUser != null) {
                   //successfully login
                   //navigate the user to main page
@@ -161,7 +160,6 @@ class LoginPage extends StatelessWidget {
                   gravity: ToastGravity.BOTTOM,
                 );
               }
-
             }
           },
         ),

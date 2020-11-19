@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,6 +9,7 @@ import 'package:healthe/login/validation.dart';
 import 'package:healthe/main/home.dart';
 
 class RegisterPage extends StatelessWidget with Validation{
+  final databaseReference = Firestore.instance;
   final formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
 
@@ -252,6 +254,16 @@ class RegisterPage extends StatelessWidget with Validation{
               try {
                 final newUser = await _auth.createUserWithEmailAndPassword(
                     email: email, password: password);
+
+
+                FirebaseUser user = newUser.user;
+                await databaseReference.collection("users")
+                    .document(user.uid)
+                    .setData({
+                  'firstname': firstName,
+                  'lastname': lastName,
+                  'username' : username
+                });
                 if (newUser != null) {
                   Navigator.push(context,
                     MaterialPageRoute(
@@ -291,4 +303,20 @@ class RegisterPage extends StatelessWidget with Validation{
       ],
     );
   }
+  // void createRecord() async {
+  //   await databaseReference.collection("users")
+  //       .document(email)
+  //       .setData({
+  //     'title': 'Mastering Flutter',
+  //     'description': 'Programming Guide for Dart'
+  //   });
+  //   await databaseReference.collection("users")
+  //       .document(email)
+  //       .setData({
+  //         'firstname': firstName,
+  //         'lastname': lastName,
+  //         'username' : username
+  //       });
+  //
+  // }
 }
