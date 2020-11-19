@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:healthe/login/login.dart';
 import 'package:healthe/login/register.dart';
 import 'package:healthe/main/consule.dart';
+import 'package:healthe/main/editprofile.dart';
 import 'package:healthe/main/emr.dart';
 import 'package:healthe/main/home.dart';
+import 'package:healthe/main/personaldocument.dart';
 import 'package:healthe/main/profile.dart';
 import 'package:healthe/main/recipe.dart';
 
@@ -17,6 +19,8 @@ void main() {
       "/" : (context) => LoginPage(),
       "/register" : (context) => RegisterPage(),
       "/main" : (context) => BottomNavBar(),
+      "/personaldocument" : (context) => PersonalDocument(),
+      "/editprofile" : (context) => EditProfile()
     },
   ));
 }
