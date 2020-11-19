@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
 import 'package:healthe/login/register.dart';
 import 'package:healthe/main/home.dart';
 
 class LoginPage extends StatelessWidget {
+  final formKey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
+  String email, password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,54 +60,63 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _textField() {
-    return Column(
-      children: <Widget>[
-        Padding(padding: EdgeInsets.only(top: 12.0),),
-        TextFormField(
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: ColorPalette.underlineTextField,
-                width: 1.5
+    return Form(
+      key: formKey,
+      child: Column(
+        children: <Widget>[
+          Padding(padding: EdgeInsets.only(top: 12.0),),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: ColorPalette.underlineTextField,
+                    width: 1.5
+                ),
               ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.white,
-                width: 3.0
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 3.0
+                ),
               ),
+              hintText: "Email",
+              hintStyle: TextStyle(color: ColorPalette.hintColor),
             ),
-            hintText: "Username",
-            hintStyle: TextStyle(color: ColorPalette.hintColor),
+            onSaved: (String value){
+              email = value;
+            },
+            style: TextStyle(color: Colors.white),
+            autofocus: false,
           ),
-          style: TextStyle(color: Colors.white),
-          autofocus: false,
-        ),
-        Padding(padding: EdgeInsets.only(top: 12.0),),
-        TextFormField(
-          decoration: const InputDecoration(
-            border: UnderlineInputBorder(),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: ColorPalette.underlineTextField,
-                  width: 1.5
+          Padding(padding: EdgeInsets.only(top: 12.0),),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: ColorPalette.underlineTextField,
+                    width: 1.5
+                ),
               ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors.white,
-                  width: 3.0
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 3.0
+                ),
               ),
+              hintText: "Password",
+              hintStyle: TextStyle(color: ColorPalette.hintColor),
             ),
-            hintText: "Password",
-            hintStyle: TextStyle(color: ColorPalette.hintColor),
+            onSaved: (String value){
+              password = value;
+            },
+            style: TextStyle(color: Colors.white),
+            obscureText: true,
+            autofocus: false,
           ),
-          style: TextStyle(color: Colors.white),
-          obscureText: true,
-          autofocus: false,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -124,8 +138,22 @@ class LoginPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(30.0),
             ),
           ),
-          onTap: () {
-            Navigator.pushNamed(context, "/main");
+          onTap: () async {
+            if(formKey.currentState.validate()){
+              formKey.currentState.save();
+              try {
+                final newUser = await _auth.signInWithEmailAndPassword(
+                    email: email, password: password);
+
+                if (newUser != null) {
+                  //successfully login
+                  //navigate the user to main page
+                  Navigator.pushNamed(context, "/main");
+                  // i am just showing toast message here
+                }
+              } catch (e) {}
+
+            }
           },
         ),
         Padding(padding: EdgeInsets.only(top: 16.0),),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
 import 'package:healthe/login/login.dart';
@@ -6,6 +7,7 @@ import 'package:healthe/main/home.dart';
 
 class RegisterPage extends StatelessWidget with Validation{
   final formKey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
 
   String firstName='';
   String lastName='';
@@ -242,11 +244,25 @@ class RegisterPage extends StatelessWidget with Validation{
               borderRadius: BorderRadius.circular(30.0),
             ),
           ),
-          onTap: () {
-            if(formKey.currentState.validate()){
+          onTap: () async {
+            // if(formKey.currentState.validate()){
               formKey.currentState.save();
+              try {
+                final newUser = await _auth.createUserWithEmailAndPassword(
+                    email: email, password: password);
+                if (newUser != null) {
+                  Navigator.push(context,
+                    MaterialPageRoute(
+                        builder: (context) => LoginPage()),
+                  );
+                }
+              }
+              catch (e)
+              {
+                print(e);
+              }
               Navigator.pushNamed(context, "/");
-            }
+            // }
           },
         ),
         Padding(padding: EdgeInsets.only(top: 16.0),),
