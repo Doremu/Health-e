@@ -303,20 +303,4 @@ class RegisterPage extends StatelessWidget with Validation{
       ],
     );
   }
-  // void createRecord() async {
-  //   await databaseReference.collection("users")
-  //       .document(email)
-  //       .setData({
-  //     'title': 'Mastering Flutter',
-  //     'description': 'Programming Guide for Dart'
-  //   });
-  //   await databaseReference.collection("users")
-  //       .document(email)
-  //       .setData({
-  //         'firstname': firstName,
-  //         'lastname': lastName,
-  //         'username' : username
-  //       });
-  //
-  // }
 }

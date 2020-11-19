@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/main.dart';
 
@@ -7,11 +9,34 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 class _HomeState extends State<Home> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  dynamic data;
+  @override
+  void initState() {
+    super.initState();
+    getUserDoc();
+  }
+
+  Future<dynamic> getUserDoc() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final Firestore _firestore = Firestore.instance;
+
+    FirebaseUser user = await _auth.currentUser();
+    DocumentReference ref = _firestore.collection('users').document(user.uid);
+    await ref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
+      setState(() {
+        data =snapshot.data;
+      });
+    });
+    nama = 'Halo, ' + data['firstname'];
+    // return ref;
+  }
+  String nama = '';
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: const Text('Halo, Aric'),
+        title: Text(nama),
         automaticallyImplyLeading: false,
       ),
       body: Container(
