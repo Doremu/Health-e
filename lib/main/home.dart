@@ -91,7 +91,7 @@ class _HomeState extends State<Home> {
                     textAlign: TextAlign.center,
                   ),
                   subtitle: Text(
-                    'Heart Beat',
+                    'Hearts Beat',
                     style: TextStyle(
                       fontSize: 20.0,
                     ),
