@@ -1,13 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:healthe/constants.dart';
+import 'package:healthe/login/error.dart';
 import 'package:healthe/login/register.dart';
 import 'package:healthe/main/home.dart';
 
 class LoginPage extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
-  String email, password;
+  String email, password, e;
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +153,14 @@ class LoginPage extends StatelessWidget {
                   Navigator.pushNamed(context, "/main");
                   // i am just showing toast message here
                 }
-              } catch (e) {}
+              } catch (error) {
+                print(error);
+                Fluttertoast.showToast(
+                  msg: Errors.show(error.code),
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                );
+              }
 
             }
           },

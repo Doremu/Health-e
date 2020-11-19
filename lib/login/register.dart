@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:healthe/constants.dart';
+import 'package:healthe/login/error.dart';
 import 'package:healthe/login/login.dart';
 import 'package:healthe/login/validation.dart';
 import 'package:healthe/main/home.dart';
@@ -247,7 +249,6 @@ class RegisterPage extends StatelessWidget with Validation{
           onTap: () async {
             formKey.currentState.save();
             if(formKey.currentState.validate()){
-
               try {
                 final newUser = await _auth.createUserWithEmailAndPassword(
                     email: email, password: password);
@@ -258,11 +259,15 @@ class RegisterPage extends StatelessWidget with Validation{
                   );
                 }
               }
-              catch (e)
+              catch (error)
               {
-                print(e);
+                print(error);
+                Fluttertoast.showToast(
+                  msg: Errors.show(error.code),
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                );
               }
-              Navigator.pushNamed(context, "/");
             }
           },
         ),
