@@ -2,13 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:health/health.dart';
 import 'package:healthe/main.dart';
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
+
+enum AppState { DATA_NOT_FETCHED, FETCHING_DATA, DATA_READY, NO_DATA }
+
 class _HomeState extends State<Home> {
+  List<HealthDataPoint> _healthDataList = [];
+  AppState _state = AppState.DATA_NOT_FETCHED;
   FirebaseAuth auth = FirebaseAuth.instance;
   dynamic data;
   @override
@@ -31,6 +37,63 @@ class _HomeState extends State<Home> {
     nama = 'Halo, ' + data['firstname'];
     // return ref;
   }
+  Future<void> fetchData() async {
+    setState(() {
+      _state = AppState.FETCHING_DATA;
+    });
+
+    /// Get everything from midnight until now
+    DateTime endDate = DateTime.now();
+    DateTime startDate = DateTime(2020, 11, 19);
+
+    HealthFactory health = HealthFactory();
+
+    /// Define the types to get.
+    List<HealthDataType> types = [
+      HealthDataType.BODY_MASS_INDEX,
+      HealthDataType.HEIGHT,
+      HealthDataType.WEIGHT,
+      HealthDataType.HEART_RATE,
+      HealthDataType.BODY_TEMPERATURE,
+    ];
+
+    /// You can request types pre-emptively, if you want to
+    /// which will make sure access is granted before the data is requested
+   bool granted = await health.requestAuthorization(types);
+
+    /// Fetch new data
+    List<HealthDataPoint> healthData =
+    await health.getHealthDataFromTypes(startDate, endDate, types);
+
+    /// Save all the new data points
+    _healthDataList.addAll(healthData);
+
+    /// Filter out duplicates
+    _healthDataList = HealthFactory.removeDuplicates(_healthDataList);
+
+    /// Print the results
+    _healthDataList.forEach((x) => print("Data point: $x"));
+
+    /// Update the UI to display the results
+    setState(() {
+      _state = _healthDataList.isEmpty ? AppState.NO_DATA : AppState.DATA_READY;
+    });
+  }
+
+  Widget _contentFetchingData() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+            padding: EdgeInsets.all(20),
+            child: CircularProgressIndicator(
+              strokeWidth: 10,
+            )),
+        Text('Fetching data...')
+      ],
+    );
+  }
+
   String nama = '';
   @override
   Widget build(BuildContext context) {
@@ -50,6 +113,7 @@ class _HomeState extends State<Home> {
                   _temperature(),
                   _heartBeat(),
                   _device(),
+                  _content()
                 ],
               ),
             )
@@ -94,20 +158,53 @@ class _HomeState extends State<Home> {
       ],
     );
   }
+
+  Widget _contentDataReady() {
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: _healthDataList.length,
+        itemBuilder: (_, index) {
+          HealthDataPoint p = _healthDataList[index];
+          return ListTile(
+            title: Text("${p.typeString}: ${p.value}"),
+            trailing: Text('${p.unitString}'),
+            subtitle: Text('${p.dateFrom} - ${p.dateTo}'),
+          );
+        });
+  }
+
+  Widget _contentNoData() {
+    return Text('No Data to show');
+  }
+
+  Widget _contentNotFetched() {
+    return Text('Press the download button to fetch data');
+  }
+  Widget _content() {
+    if (_state == AppState.DATA_READY)
+      return _contentDataReady();
+    else if (_state == AppState.NO_DATA)
+      return _contentNoData();
+    else if (_state == AppState.FETCHING_DATA) return _contentFetchingData();
+
+    return _contentNotFetched();
+  }
   Widget _heartBeat() {
     return Column(
       children: <Widget>[
         Padding(padding: EdgeInsets.only(top: 30.0),),
         Card(
-          child: InkWell(
+          child: new InkWell(
             splashColor: Colors.blue.withAlpha(30),
-            onTap: () {
-              print('Card tapped.');
+            onTap: () async{
+              fetchData();
             },
             child: Column(
               children: <Widget>[
                 Padding(padding: EdgeInsets.only(top: 30.0),),
                 const ListTile(
+
                   title: Text(
                     '100BPM',
                     style: TextStyle(
@@ -127,6 +224,7 @@ class _HomeState extends State<Home> {
               ],
 
             ),
+
           ),
         ),
         Padding(
