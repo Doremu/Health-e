@@ -134,7 +134,7 @@ class _HomeState extends State<Home> {
 
   String nama = '';
   double getHeartbeat = 0;
-  String heartbeat = '';
+  String heartbeat = '0';
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
