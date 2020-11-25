@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/main.dart';
 
@@ -7,11 +9,33 @@ class Consule extends StatefulWidget {
   _ConsuleState createState() => _ConsuleState();
 }
 class _ConsuleState extends State<Consule> {
+  String nama = '';
+  dynamic data;
+  @override
+  void initState() {
+    super.initState();
+    getUserDoc();
+  }
+
+  Future<dynamic> getUserDoc() async {
+
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final Firestore _firestore = Firestore.instance;
+
+    FirebaseUser user = await _auth.currentUser();
+    DocumentReference namaref = _firestore.collection('users').document(user.uid);
+    await namaref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
+      setState(() {
+        data =snapshot.data;
+      });
+    });
+    nama = 'Halo, ' + data['firstname'];
+  }
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: const Text('Halo, Aric'),
+        title: Text(nama),
         automaticallyImplyLeading: false,
       ),
       body: Container(

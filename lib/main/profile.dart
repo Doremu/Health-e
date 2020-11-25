@@ -14,6 +14,12 @@ class _ProfileState extends State<Profile> {
   dynamic data;
   String nama;
   String email;
+  double getHeight;
+  String height;
+  double getWeight;
+  String weight;
+  double getBmi;
+  String bmi;
   @override
   void initState() {
     super.initState();
@@ -33,13 +39,18 @@ class _ProfileState extends State<Profile> {
     });
     nama = data['firstname'] + data['lastname'];
     email = user.email;
-    // DocumentReference heartref = _firestore.collection('scan').document(user.uid);
-    // await heartref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
-    //   setState(() {
-    //     data =snapshot.data;
-    //   });
-    // });
-    // getHeartbeat = data['HEART_RATE'];
+    DocumentReference heartref = _firestore.collection('scan').document(user.uid);
+    await heartref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
+      setState(() {
+        data =snapshot.data;
+      });
+    });
+    getHeight = data['HEIGHT'];
+    height = getHeight.toStringAsFixed(2);
+    getWeight = data['WEIGHT'];
+    weight = '' + getWeight.toString();
+    getBmi = data['BODY_MASS_INDEX'];
+    bmi = '' + getBmi.toStringAsFixed(2);
     // heartbeat = '' + getHeartbeat.toString();
     // return ref;
   }
@@ -102,9 +113,9 @@ class _ProfileState extends State<Profile> {
         Row(
           children: <Widget>[
             _profileStat("Umur","21"),
-            _profileStat("Tinggi (cm)","170"),
-            _profileStat("Berat (kg)","60"),
-            _profileStat("Gol. Darah","O"),
+            _profileStat("Tinggi (m)", "${height}"),
+            _profileStat("Berat (kg)", "${weight}"),
+            _profileStat("Gol. Darah","B"),
           ]
         ),
         Padding(padding: EdgeInsets.only(top: 16.0))
@@ -141,7 +152,7 @@ class _ProfileState extends State<Profile> {
                 ),
                 Expanded(
                   child: Center(
-                    child: Text("20.8", style: TextStyle(fontSize: 36.0))
+                    child: Text("${bmi}", style: TextStyle(fontSize: 36.0))
                   )
                 )
               ]
