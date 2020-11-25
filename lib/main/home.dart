@@ -37,6 +37,15 @@ class _HomeState extends State<Home> {
       });
     });
     nama = 'Halo, ' + data['firstname'];
+
+    ref = _firestore.collection('scan').document(user.uid);
+    await ref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
+      setState(() {
+        data =snapshot.data;
+      });
+    });
+    getHeartbeat = data['HEART_RATE'];
+    heartbeat = '' + getHeartbeat.toString();
     // return ref;
   }
   Future<void> fetchData() async {
@@ -124,6 +133,8 @@ class _HomeState extends State<Home> {
   }
 
   String nama = '';
+  double getHeartbeat = 0;
+  String heartbeat = '';
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -221,6 +232,7 @@ class _HomeState extends State<Home> {
     return _contentNotFetched();
   }
   Widget _heartBeat() {
+    String a = 'x';
     return Column(
       children: <Widget>[
         Padding(padding: EdgeInsets.only(top: 30.0),),
@@ -233,16 +245,16 @@ class _HomeState extends State<Home> {
             child: Column(
               children: <Widget>[
                 Padding(padding: EdgeInsets.only(top: 30.0),),
-                const ListTile(
-
+                ListTile(
                   title: Text(
-                    '100BPM',
+                    heartbeat,
                     style: TextStyle(
                     fontSize: 30.0,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  subtitle: Text(
+
+                  subtitle: const Text(
                     'Hearts Beat',
                     style: TextStyle(
                       fontSize: 20.0,
