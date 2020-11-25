@@ -177,7 +177,7 @@ class LoginPage extends StatelessWidget {
             },
             child: Text(
               'Create account',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.blue),
             )
         )
       ],
