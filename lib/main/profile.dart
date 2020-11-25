@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
 import 'package:healthe/main.dart';
@@ -9,6 +11,38 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  dynamic data;
+  String nama;
+  String email;
+  @override
+  void initState() {
+    super.initState();
+    getUserDoc();
+  }
+  Future<dynamic> getUserDoc() async {
+
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final Firestore _firestore = Firestore.instance;
+
+    FirebaseUser user = await _auth.currentUser();
+    DocumentReference namaref = _firestore.collection('users').document(user.uid);
+    await namaref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
+      setState(() {
+        data =snapshot.data;
+      });
+    });
+    nama = data['firstname'] + data['lastname'];
+    email = user.email;
+    // DocumentReference heartref = _firestore.collection('scan').document(user.uid);
+    // await heartref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
+    //   setState(() {
+    //     data =snapshot.data;
+    //   });
+    // });
+    // getHeartbeat = data['HEART_RATE'];
+    // heartbeat = '' + getHeartbeat.toString();
+    // return ref;
+  }
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -54,9 +88,9 @@ class _ProfileState extends State<Profile> {
   Widget _profileName() {
     return Column(
       children: [
-        Text("Fransiskus Aprilion Aric", style: TextStyle(fontSize: 20.0)),
+        Text("${nama}", style: TextStyle(fontSize: 20.0)),
         Padding(padding: EdgeInsets.only(top: 8.0)),
-        Text("fransiskusaric@gmail.com", style: TextStyle(fontSize: 14.0)),
+        Text("${email}", style: TextStyle(fontSize: 14.0)),
         Padding(padding: EdgeInsets.only(top: 16.0)),
       ],
     );
