@@ -13,6 +13,7 @@ class Home extends StatefulWidget {
 enum AppState { DATA_NOT_FETCHED, FETCHING_DATA, DATA_READY, NO_DATA }
 
 class _HomeState extends State<Home> {
+  final databaseReference = Firestore.instance;
   List<HealthDataPoint> _healthDataList = [];
   AppState _state = AppState.DATA_NOT_FETCHED;
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -24,6 +25,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<dynamic> getUserDoc() async {
+
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final Firestore _firestore = Firestore.instance;
 
@@ -38,13 +40,16 @@ class _HomeState extends State<Home> {
     // return ref;
   }
   Future<void> fetchData() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    FirebaseUser user = await _auth.currentUser();
     setState(() {
       _state = AppState.FETCHING_DATA;
     });
 
     /// Get everything from midnight until now
     DateTime endDate = DateTime.now();
-    DateTime startDate = DateTime(2020, 11, 19);
+    // DateTime startDate = DateTime(2020, 11, 24);
+    DateTime startDate = endDate.subtract(new Duration(hours: 50));
 
     HealthFactory health = HealthFactory();
 
@@ -78,6 +83,30 @@ class _HomeState extends State<Home> {
     setState(() {
       _state = _healthDataList.isEmpty ? AppState.NO_DATA : AppState.DATA_READY;
     });
+    double height = 0;
+    double weight = 0;
+    double bmi = 0;
+    double heart = 0;
+    double temp = 0;
+    for(var i in _healthDataList) {
+      HealthDataPoint p = i;
+      print("AAAAA: $p");
+
+      if (p.typeString == 'WEIGHT') weight = p.value;
+      if (p.typeString == 'HEIGHT') height = p.value;
+      if (p.typeString == 'BODY_MASS_INDEX')bmi = p.value;
+      if (p.typeString == 'HEART_RATE')heart = p.value;
+      if (p.typeString == 'BODY_TEMPERATURE')temp = p.value;
+    }
+    await databaseReference.collection("scan")
+        .document(user.uid)
+        .setData({
+      'WEIGHT': weight,
+      'HEIGHT': height,
+      'BODY_MASS_INDEX': bmi,
+      'HEART_RATE': heart,
+      'BODY_TEMPERATURE': temp
+    });
   }
 
   Widget _contentFetchingData() {
@@ -110,9 +139,9 @@ class _HomeState extends State<Home> {
             Center(
               child: Column(
                 children: <Widget>[
-                  _temperature(),
+                  // _temperature(),
                   _heartBeat(),
-                  _device(),
+                  // _device(),
                   _content()
                 ],
               ),
@@ -171,7 +200,8 @@ class _HomeState extends State<Home> {
             trailing: Text('${p.unitString}'),
             subtitle: Text('${p.dateFrom} - ${p.dateTo}'),
           );
-        });
+
+      });
   }
 
   Widget _contentNoData() {
