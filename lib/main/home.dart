@@ -30,16 +30,16 @@ class _HomeState extends State<Home> {
     final Firestore _firestore = Firestore.instance;
 
     FirebaseUser user = await _auth.currentUser();
-    DocumentReference ref = _firestore.collection('users').document(user.uid);
-    await ref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
+    DocumentReference namaref = _firestore.collection('users').document(user.uid);
+    await namaref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
       setState(() {
         data =snapshot.data;
       });
     });
     nama = 'Halo, ' + data['firstname'];
 
-    ref = _firestore.collection('scan').document(user.uid);
-    await ref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
+    DocumentReference heartref = _firestore.collection('scan').document(user.uid);
+    await heartref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
       setState(() {
         data =snapshot.data;
       });
@@ -199,20 +199,26 @@ class _HomeState extends State<Home> {
     );
   }
 
+  // Widget _contentDataReady() {
+  //   return ListView.builder(
+  //       scrollDirection: Axis.vertical,
+  //       shrinkWrap: true,
+  //       itemCount: _healthDataList.length,
+  //       itemBuilder: (_, index) {
+  //         HealthDataPoint p = _healthDataList[index];
+  //         return Text(
+  //           'Fetching data success'
+  //           // title: Text("${p.typeString}: ${p.value}"),
+  //           // trailing: Text('${p.unitString}'),
+  //           // subtitle: Text('${p.dateFrom} - ${p.dateTo}'),
+  //         );
+  //
+  //     });
+  // }
   Widget _contentDataReady() {
-    return ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemCount: _healthDataList.length,
-        itemBuilder: (_, index) {
-          HealthDataPoint p = _healthDataList[index];
-          return ListTile(
-            title: Text("${p.typeString}: ${p.value}"),
-            trailing: Text('${p.unitString}'),
-            subtitle: Text('${p.dateFrom} - ${p.dateTo}'),
-          );
-
-      });
+    return Text(
+      'Fetching data success'
+    );
   }
 
   Widget _contentNoData() {
@@ -220,7 +226,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _contentNotFetched() {
-    return Text('Press the download button to fetch data');
+    return Text('Press the card to fetch data');
   }
   Widget _content() {
     if (_state == AppState.DATA_READY)
