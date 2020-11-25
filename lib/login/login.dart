@@ -15,7 +15,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: ColorPalette.primaryColor,
+        color: Colors.white,
         padding: EdgeInsets.all(20.0),
         child: ListView(
           children: <Widget>[
@@ -50,7 +50,7 @@ class LoginPage extends StatelessWidget {
         Text(
           "Login",
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.blueAccent,
             fontSize: 16.0
           ),
         ),
@@ -88,7 +88,7 @@ class LoginPage extends StatelessWidget {
             onSaved: (String value){
               email = value;
             },
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.blueAccent),
             autofocus: false,
           ),
           Padding(padding: EdgeInsets.only(top: 12.0),),
@@ -113,7 +113,7 @@ class LoginPage extends StatelessWidget {
             onSaved: (String value){
               password = value;
             },
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.blueAccent),
             obscureText: true,
             autofocus: false,
           ),
@@ -132,11 +132,11 @@ class LoginPage extends StatelessWidget {
             width: double.infinity,
             child: Text(
               'Login',
-              style: TextStyle(color: ColorPalette.primaryColor),
+              style: TextStyle(color: Colors.white),
               textAlign: TextAlign.center,
             ),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.lightBlue,
               borderRadius: BorderRadius.circular(30.0),
             ),
           ),
