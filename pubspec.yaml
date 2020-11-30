@@ -36,6 +36,8 @@ dependencies:
   cloud_firestore: ^0.13.0+1
   fluttertoast: ^7.1.1
   health: ^2.0.9
+  firebase_storage: ^3.0.8
+  image_picker: ^0.6.7+4
 
 
 

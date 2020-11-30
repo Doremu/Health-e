@@ -1,9 +1,16 @@
+// import 'dart:html';
+
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
 import 'package:healthe/main.dart';
+import 'package:path/path.dart' as path;
+import 'package:image_picker/image_picker.dart';
 
 class ConsuleForm extends StatefulWidget {
   @override
@@ -12,12 +19,35 @@ class ConsuleForm extends StatefulWidget {
 
 class _ConsuleFormState extends State<ConsuleForm> {
   dynamic data;
+  File _imageFile;
+  final picker = ImagePicker();
+
   String _valDokter;
   String emailDokter = '';
   List dokter = [];
   void initState() {
     super.initState();
     getDoctorDoc();
+  }
+
+  Future pickImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      _imageFile = File(pickedFile.path);
+    });
+    // String x = basename
+  }
+
+  Future uploadImageToFirebase(BuildContext context) async {
+    String fileName = path.basename(_imageFile.path);
+    StorageReference firebaseStorageRef =
+    FirebaseStorage.instance.ref().child('uploads/$fileName');
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFile);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    taskSnapshot.ref.getDownloadURL().then(
+          (value) => print("Done: $value"),
+    );
   }
 
   Future<dynamic> getDoctorDoc() async {
@@ -125,11 +155,12 @@ class _ConsuleFormState extends State<ConsuleForm> {
               borderRadius: BorderRadius.circular(30.0),
             ),
           ),
-          onTap: () {
-            Navigator.pushNamed(context, "/login");
+          onTap: () async {
+            // Navigator.pushNamed(context, "/login");
+            pickImage();
           },
         ),
-        Padding(padding: EdgeInsets.only(top: 24.0))
+        Padding(padding: EdgeInsets.only(top: 24.0)),
       ]
     );
   }
@@ -150,7 +181,8 @@ class _ConsuleFormState extends State<ConsuleForm> {
         ),
       ),
       onTap: () {
-        Navigator.pushNamed(context, "/login");
+        // Navigator.pushNamed(context, "/login");
+        uploadImageToFirebase(context);
       },
     );
   }
