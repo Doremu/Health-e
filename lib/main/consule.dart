@@ -55,7 +55,7 @@ class _ConsuleState extends State<Consule> {
               child: Column(
                 children: [
                   Text(
-                    "Telekonsultasi",
+                    "Konsultasi",
                     style: TextStyle(
                       fontSize: 20.0,
                     ),
@@ -68,35 +68,10 @@ class _ConsuleState extends State<Consule> {
               )
             ),
             onTap: () {
-
+              Navigator.pushNamed(context, "/consuleform");
             },
           )
         ),
-        Padding(padding: EdgeInsets.only(top: 16.0)),
-        Card(
-          child: InkWell(
-            child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  Text(
-                    "Reservasi Online",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 8.0)),
-                  Text("Buat janji konsultasi di rumah sakit terdaftar.")
-                ],
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-              )
-            ),
-            onTap: () {
-              
-            },
-          )
-        )
       ]
     );
   }
