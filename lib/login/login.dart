@@ -149,7 +149,7 @@ class LoginPage extends StatelessWidget {
                 if (newUser != null) {
                   //successfully login
                   //navigate the user to main page
-                  Navigator.pushNamed(context, "/main");
+                  Navigator.pushNamed(context, "/");
                   // i am just showing toast message here
                 }
               } catch (error) {

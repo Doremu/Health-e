@@ -30,6 +30,11 @@ class _ProfileState extends State<Profile> {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final Firestore _firestore = Firestore.instance;
 
+    if(_auth.currentUser() == null){
+      // wrong call in wrong place!
+      Navigator.pushNamed(context, '/login');
+    }
+
     FirebaseUser user = await _auth.currentUser();
     DocumentReference namaref = _firestore.collection('users').document(user.uid);
     await namaref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
@@ -205,8 +210,10 @@ class _ProfileState extends State<Profile> {
           borderRadius: BorderRadius.circular(30.0),
         ),
       ),
-      onTap: () {
-        Navigator.pop(context);
+      onTap: () async {
+        // Navigator.pop(context);
+        await FirebaseAuth.instance.signOut();
+        Navigator.pushNamed(context, "/login");
       },
     );
   }

@@ -17,12 +17,12 @@ void main() {
     title: "Login Register Page",
     initialRoute: "/",
     routes: {
-      "/" : (context) => LoginPage(),
-      "/register" : (context) => RegisterPage(),
-      "/main" : (context) => BottomNavBar(),
-      "/personaldocument" : (context) => PersonalDocument(),
-      "/editprofile" : (context) => EditProfile(),
-      "/consuleform" : (context) => ConsuleForm()
+      '/login' : (context) => LoginPage(),
+      '/register' : (context) => RegisterPage(),
+      '/' : (context) => BottomNavBar(),
+      '/personaldocument' : (context) => PersonalDocument(),
+      '/editprofile' : (context) => EditProfile(),
+      '/consuleform' : (context) => ConsuleForm()
     },
   ));
 }

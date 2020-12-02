@@ -3,7 +3,9 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
+import 'package:healthe/login/login.dart';
 import 'package:healthe/main.dart';
+import 'package:healthe/user.model.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -21,13 +23,46 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+
+    // Assign widget based on availability of currentUser
+    Future.delayed(Duration(milliseconds: 100)).then((_) {
+      if (FirebaseAuth.instance.currentUser() == null) {
+        Navigator.pushNamed(context, '/login');
+      }
+    });
+    // if (FirebaseAuth.instance.currentUser() != null) {
+    //   Navigator.pushNamed(context, '/login');
+    // }
+    // else getUserDoc();
+
+    // if(FirebaseAuth.instance.currentUser() != null){
+    //   // wrong call in wrong place!
+    //   Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //       builder: (context) => LoginPage()
+    //   ));
+    // }
+    // loginCheck();
     getUserDoc();
+  }
+
+  Future<FirebaseUser> loginCheck() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    if(_auth.currentUser() == null){
+      // wrong call in wrong place!
+      Navigator.pushNamed(context, '/login');
+    }
   }
 
   Future<dynamic> getUserDoc() async {
 
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final Firestore _firestore = Firestore.instance;
+
+    // if(_auth.currentUser() == null){
+    //   // wrong call in wrong place!
+    //   Navigator.pushNamed(context, '/login');
+    // }
 
     FirebaseUser user = await _auth.currentUser();
     DocumentReference namaref = _firestore.collection('users').document(user.uid);
