@@ -15,6 +15,7 @@ class Home extends StatefulWidget {
 enum AppState { DATA_NOT_FETCHED, FETCHING_DATA, DATA_READY, NO_DATA }
 
 class _HomeState extends State<Home> {
+
   final databaseReference = Firestore.instance;
   List<HealthDataPoint> _healthDataList = [];
   AppState _state = AppState.DATA_NOT_FETCHED;
@@ -59,12 +60,12 @@ class _HomeState extends State<Home> {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final Firestore _firestore = Firestore.instance;
 
-    // if(_auth.currentUser() == null){
-    //   // wrong call in wrong place!
-    //   Navigator.pushNamed(context, '/login');
-    // }
-
     FirebaseUser user = await _auth.currentUser();
+
+    if(user.email == 'apayaajaapaya@gmail.com') {
+      Navigator.pushNamed(context, "/dokter");
+    }
+
     DocumentReference namaref = _firestore.collection('users').document(user.uid);
     await namaref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
       setState(() {
