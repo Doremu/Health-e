@@ -99,7 +99,7 @@ class _PersonalDocumentState extends State<PersonalDocument> {
       ),
       body: new Container(
         padding: EdgeInsets.all(20.0),
-        child: Column(
+        child: ListView(
           children: [
             _documentImage("Kartu Tanda Penduduk"),
             _documentImage("Swafoto dengan KTP"),
