@@ -1,7 +1,13 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
 import 'package:healthe/main.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 
 class PersonalDocument extends StatefulWidget {
   @override
@@ -9,6 +15,82 @@ class PersonalDocument extends StatefulWidget {
 }
 
 class _PersonalDocumentState extends State<PersonalDocument> {
+  File _imageFileKtp;
+  File _imageFileKtpOrang;
+  File _imageFileBPJS;
+  final picker = ImagePicker();
+  final databaseReference = Firestore.instance;
+  String imageUrlKtp = '';
+  String imageUrlKtpOrang = '';
+  String imageUrlBPJS = '';
+  Future pickImageKtp() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      _imageFileKtp = File(pickedFile.path);
+    });
+    // String x = basename
+  }
+  Future pickImageKtpOrang() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      _imageFileKtpOrang = File(pickedFile.path);
+    });
+    // String x = basename
+  }
+  Future pickImageBPJS() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    setState(() {
+      _imageFileBPJS = File(pickedFile.path);
+    });
+    // String x = basename
+  }
+
+  uploadImageKTPToFirebase(BuildContext context) async {
+    String fileName = path.basename(_imageFileKtp.path);
+    StorageReference firebaseStorageRef =
+    FirebaseStorage.instance.ref().child('uploads/$fileName');
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFileKtp);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    taskSnapshot.ref.getDownloadURL().then(
+            (value) => {
+          print("Done: $value"),
+          imageUrlKtp = value,
+        }
+    );
+    imageUrlKtp = await taskSnapshot.ref.getDownloadURL();
+  }
+  uploadImageKTPOrangToFirebase(BuildContext context) async {
+    String fileName = path.basename(_imageFileKtpOrang.path);
+    StorageReference firebaseStorageRef =
+    FirebaseStorage.instance.ref().child('uploads/$fileName');
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFileKtpOrang);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    taskSnapshot.ref.getDownloadURL().then(
+            (value) => {
+          print("Done: $value"),
+          imageUrlKtpOrang = value,
+        }
+    );
+    imageUrlKtpOrang = await taskSnapshot.ref.getDownloadURL();
+  }
+  uploadImageBPJSToFirebase(BuildContext context) async {
+    String fileName = path.basename(_imageFileBPJS.path);
+    StorageReference firebaseStorageRef =
+    FirebaseStorage.instance.ref().child('uploads/$fileName');
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFileBPJS);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    taskSnapshot.ref.getDownloadURL().then(
+            (value) => {
+          print("Done: $value"),
+          imageUrlBPJS = value,
+        }
+    );
+    imageUrlBPJS = await taskSnapshot.ref.getDownloadURL();
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -52,8 +134,17 @@ class _PersonalDocumentState extends State<PersonalDocument> {
               borderRadius: BorderRadius.circular(30.0),
             ),
           ),
-          onTap: () {
-            Navigator.pushNamed(context, "/login");
+          onTap: () async {
+            if (label == 'Kartu Tanda Penduduk') {
+              pickImageKtp();
+            }
+            else if(label == 'Swafoto dengan KTP') {
+              pickImageKtpOrang();
+            }
+            else if(label == 'Nomor BPJS') {
+              pickImageBPJS();
+            }
+            // Navigator.pushNamed(context, "/login");
           },
         ),
         Padding(padding: EdgeInsets.only(top: 16.0))
