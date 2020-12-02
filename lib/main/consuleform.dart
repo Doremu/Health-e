@@ -7,8 +7,10 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:healthe/constants.dart';
 import 'package:healthe/main.dart';
+import 'package:healthe/main/consuleerror.dart';
 import 'package:path/path.dart' as path;
 import 'package:image_picker/image_picker.dart';
 
@@ -21,9 +23,13 @@ class _ConsuleFormState extends State<ConsuleForm> {
   dynamic data;
   File _imageFile;
   final picker = ImagePicker();
+  final databaseReference = Firestore.instance;
+  final formKey = GlobalKey<FormState>();
 
   String _valDokter;
   String emailDokter = '';
+  String keluhan = '';
+  String imageUrl = '';
   List dokter = [];
   void initState() {
     super.initState();
@@ -39,14 +45,17 @@ class _ConsuleFormState extends State<ConsuleForm> {
     // String x = basename
   }
 
-  Future uploadImageToFirebase(BuildContext context) async {
+  uploadImageToFirebase(BuildContext context) async {
     String fileName = path.basename(_imageFile.path);
     StorageReference firebaseStorageRef =
     FirebaseStorage.instance.ref().child('uploads/$fileName');
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFile);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     taskSnapshot.ref.getDownloadURL().then(
-          (value) => print("Done: $value"),
+          (value) => {
+            print("Done: $value"),
+            imageUrl = value,
+          }
     );
   }
 
@@ -73,13 +82,16 @@ class _ConsuleFormState extends State<ConsuleForm> {
       ),
       body: new Container(
         padding: EdgeInsets.all(20.0),
-        child: ListView(
-          children: [
-            _inputDropdown("Doktor"),
-            _inputText("Keluhan"),
-            _inputAttachment("Lampiran (tidak wajib)"),
-            _btnSubmit()
-          ]
+        child: Form(
+          key: formKey,
+          child: ListView(
+            children: [
+              _inputDropdown("Doktor"),
+              _inputText("Keluhan"),
+              _inputAttachment("Lampiran (tidak wajib)"),
+              _btnSubmit()
+            ]
+          )
         )
       )
     );
@@ -99,6 +111,9 @@ class _ConsuleFormState extends State<ConsuleForm> {
             hintStyle: TextStyle(color: ColorPalette.hintColor),
           ),
           autofocus: false,
+          onSaved: (String value){
+            keluhan = value;
+          },
         ),
         Padding(padding: EdgeInsets.only(top: 16.0))
       ]
@@ -180,9 +195,32 @@ class _ConsuleFormState extends State<ConsuleForm> {
           borderRadius: BorderRadius.circular(30.0),
         ),
       ),
-      onTap: () {
-        // Navigator.pushNamed(context, "/login");
-        uploadImageToFirebase(context);
+      onTap: () async {
+        await uploadImageToFirebase(context);
+
+        formKey.currentState.save();
+        if(formKey.currentState.validate()){
+          try {
+            String docname = emailDokter+" "+DateTime.now().toString();
+            await databaseReference.collection("consules")
+                .document(docname)
+                .setData({
+              'emailDokter': emailDokter,
+              'keluhan': keluhan,
+              'imageUrl' : imageUrl
+            });
+            Navigator.pop(context);
+          }
+          catch (error)
+          {
+            print(error);
+            Fluttertoast.showToast(
+              msg: Errors.show(error.code),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+            );
+          }
+        }
       },
     );
   }
