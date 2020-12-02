@@ -83,10 +83,10 @@ class _PersonalDocumentState extends State<PersonalDocument> {
                   width: 3.0
               ),
             ),
-            hintText: "First Name",
+            hintText: "",
             hintStyle: TextStyle(color: ColorPalette.hintColor),
           ),
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.blueAccent),
           autofocus: false,
         ),
         Padding(padding: EdgeInsets.only(top: 16.0))
