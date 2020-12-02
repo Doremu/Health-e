@@ -57,6 +57,7 @@ class _ConsuleFormState extends State<ConsuleForm> {
             imageUrl = value,
           }
     );
+    imageUrl = await taskSnapshot.ref.getDownloadURL();
   }
 
   Future<dynamic> getDoctorDoc() async {
