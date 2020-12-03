@@ -6,10 +6,32 @@ import 'package:healthe/login/error.dart';
 import 'package:healthe/login/register.dart';
 import 'package:healthe/main/home.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   String email, password, e;
+
+  @override
+  void initState() {
+    super.initState();
+    // Assign widget based on availability of currentUser
+    Future.delayed(Duration(milliseconds: 100)).then((_) async {
+      final FirebaseAuth _auth = FirebaseAuth.instance;
+      FirebaseUser user = await _auth.currentUser();
+      if (FirebaseAuth.instance.currentUser() == null || user.isAnonymous) {
+        Navigator.pushNamed(context, '/login');
+      }
+      else if(user.email == 'apayaajaapaya@gmail.com') {
+        Navigator.pushNamed(context, "/dokter");
+      }
+      else Navigator.pushNamed(context, "/main");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
