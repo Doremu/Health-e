@@ -17,7 +17,7 @@ class _HomeDokterState extends State<mainDokter> {
   dynamic data;
   String email;
   String printData = "";
-  
+  var list;
   @override
   void initState() {
     super.initState();
@@ -42,13 +42,30 @@ class _HomeDokterState extends State<mainDokter> {
     });
     email = user.email;
 
-    CollectionReference consuleref = _firestore.collection('consules');
-    List<QuerySnapshot> consules = new List<QuerySnapshot>();
-    consuleref.getDocuments().then((doc) => {
-      consules.add(doc),
-      print(doc),
-      printData += doc.toString() + "\n"
-    });
+    // CollectionReference consuleref = _firestore.collection('consules');
+    // List<QuerySnapshot> consules = new List<QuerySnapshot>();
+    // consuleref.getDocuments().then((doc) => {
+    //   consules.add(doc),
+    //   print("APAAAA $doc"),
+    //   printData += doc.toString() + "\n"
+    // });
+
+    QuerySnapshot querySnapshot = await Firestore.instance.collection("consules").getDocuments();
+    for (int i = 0; i < querySnapshot.documents.length; i++) {
+      var a = querySnapshot.documents[i]['emailDokter'];
+      print(a);
+      printData += a + "\n";
+    }
+    // list = querySnapshot.documents;
+
+    // _firestore.collection("consules").getDocuments().then((querySnapshot) {
+    //   querySnapshot.documents.forEach((result) {
+    //     print("NANIIII ${result['emailDokter']}");
+    //
+    //   });
+    // });
+
+
 
   }
   
