@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
@@ -9,6 +10,48 @@ class mainDokter extends StatefulWidget {
 }
 
 class _HomeDokterState extends State<mainDokter> {
+  
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Firestore _firestore = Firestore.instance;
+  
+  dynamic data;
+  String email;
+  String printData = "";
+  
+  @override
+  void initState() {
+    super.initState();
+    getUserDoc();
+  }
+
+  Future<dynamic> getUserDoc() async {
+
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final Firestore _firestore = Firestore.instance;
+
+    if(_auth.currentUser() == null){
+      Navigator.pushNamed(context, '/login');
+    }
+
+    FirebaseUser user = await _auth.currentUser();
+    DocumentReference namaref = _firestore.collection('users').document(user.uid);
+    await namaref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
+      setState(() {
+        data = snapshot.data;
+      });
+    });
+    email = user.email;
+
+    CollectionReference consuleref = _firestore.collection('consules');
+    List<QuerySnapshot> consules = new List<QuerySnapshot>();
+    consuleref.getDocuments().then((doc) => {
+      consules.add(doc),
+      print(doc),
+      printData += doc.toString() + "\n"
+    });
+
+  }
+  
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -26,7 +69,7 @@ class _HomeDokterState extends State<mainDokter> {
               child: Column(
                 children: <Widget>[
                   // _temperature(),
-                  // _pasien(),
+                   _pasien(),
                   // _content(),
                   _logout()
                 ],
@@ -36,6 +79,10 @@ class _HomeDokterState extends State<mainDokter> {
         ),
       ),
     );
+  }
+
+  Widget _pasien() {
+    return Text(printData);
   }
 
   Widget _logout() {
