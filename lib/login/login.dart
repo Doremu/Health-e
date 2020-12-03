@@ -152,7 +152,7 @@ class LoginPage extends StatelessWidget {
                   if (email == 'apayajaapaya@gmail.com') {
                     Navigator.pushNamed(context, "/dokter");
                   }
-                  else Navigator.pushNamed(context, "/");
+                  else Navigator.pushNamed(context, "/main");
                   // i am just showing toast message here
                 }
               } catch (error) {

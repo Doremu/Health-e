@@ -18,9 +18,9 @@ void main() {
     title: "Login Register Page",
     initialRoute: "/",
     routes: {
-      '/login' : (context) => LoginPage(),
+      '/' : (context) => LoginPage(),
       '/register' : (context) => RegisterPage(),
-      '/' : (context) => BottomNavBar(),
+      '/main' : (context) => BottomNavBar(),
       '/personaldocument' : (context) => PersonalDocument(),
       '/editprofile' : (context) => EditProfile(),
       '/consuleform' : (context) => ConsuleForm(),

@@ -20,17 +20,19 @@ class _HomeState extends State<Home> {
   List<HealthDataPoint> _healthDataList = [];
   AppState _state = AppState.DATA_NOT_FETCHED;
   FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // final Firestore _firestore = Firestore.instance;
+
   dynamic data;
   @override
   void initState() {
     super.initState();
-
     // Assign widget based on availability of currentUser
-    Future.delayed(Duration(milliseconds: 100)).then((_) {
-      if (FirebaseAuth.instance.currentUser() == null) {
-        Navigator.pushNamed(context, '/login');
-      }
-    });
+    // Future.delayed(Duration(milliseconds: 100)).then((_) {
+    //   if (FirebaseAuth.instance.currentUser() == null || user.isAnonymous) {
+    //     Navigator.pushNamed(context, '/login');
+    //   }
+    // });
     // if (FirebaseAuth.instance.currentUser() != null) {
     //   Navigator.pushNamed(context, '/login');
     // }
@@ -48,10 +50,14 @@ class _HomeState extends State<Home> {
 
   Future<FirebaseUser> loginCheck() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
+    FirebaseUser user = await _auth.currentUser();
 
     if(_auth.currentUser() == null){
       // wrong call in wrong place!
       Navigator.pushNamed(context, '/login');
+    }
+    else if(user.email == 'apayaajaapaya@gmail.com') {
+      Navigator.pushNamed(context, "/dokter");
     }
   }
 
@@ -62,9 +68,21 @@ class _HomeState extends State<Home> {
 
     FirebaseUser user = await _auth.currentUser();
 
-    if(user.email == 'apayaajaapaya@gmail.com') {
-      Navigator.pushNamed(context, "/dokter");
-    }
+    Future.delayed(Duration(milliseconds: 100)).then((_) {
+      if (FirebaseAuth.instance.currentUser() == null) {
+        Navigator.pushNamed(context, '/login');
+      }
+      if(user.email == null) {
+        Navigator.pushNamed(context, "/login");
+      }
+      else if(user.email == 'apayaajaapaya@gmail.com') {
+        Navigator.pushNamed(context, "/dokter");
+      }
+    });
+
+    // if(user.email == 'apayaajaapaya@gmail.com') {
+    //   Navigator.pushNamed(context, "/dokter");
+    // }
 
     DocumentReference namaref = _firestore.collection('users').document(user.uid);
     await namaref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
