@@ -30,9 +30,11 @@ class _ConsuleFormState extends State<ConsuleForm> {
   String emailDokter = '';
   String keluhan = '';
   String imageUrl = '';
+  String uidPasien = '';
   List dokter = [];
   void initState() {
     super.initState();
+    getUserDoc();
     getDoctorDoc();
   }
 
@@ -52,12 +54,25 @@ class _ConsuleFormState extends State<ConsuleForm> {
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_imageFile);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     taskSnapshot.ref.getDownloadURL().then(
-          (value) => {
-            print("Done: $value"),
-            imageUrl = value,
-          }
+      (value) => {
+        print("Done: $value"),
+        imageUrl = value,
+      }
     );
     imageUrl = await taskSnapshot.ref.getDownloadURL();
+  }
+
+  Future<dynamic> getUserDoc() async {
+
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final Firestore _firestore = Firestore.instance;
+
+    if(_auth.currentUser() == null){
+      Navigator.pushNamed(context, '/login');
+    }
+
+    FirebaseUser user = await _auth.currentUser();
+    uidPasien = user.uid;
   }
 
   Future<dynamic> getDoctorDoc() async {
@@ -207,8 +222,10 @@ class _ConsuleFormState extends State<ConsuleForm> {
                 .document(docname)
                 .setData({
               'emailDokter': emailDokter,
+              'uidPasien': uidPasien,
               'keluhan': keluhan,
-              'imageUrl' : imageUrl
+              'imageUrl' : imageUrl,
+              'tanggal' : FieldValue.serverTimestamp()
             });
             Navigator.pop(context);
           }

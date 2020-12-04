@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
 import 'package:healthe/main.dart';
+import 'package:intl/intl.dart';
 
 class Emr extends StatefulWidget {
   @override
@@ -108,11 +109,7 @@ class _EmrState extends State<Emr> {
       case 5: timeString = "5 hari yang lalu"; break;
       case 6: timeString = "6 hari yang lalu"; break;
       default: 
-        List<String> months = [
-          'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-          'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-        ];
-        timeString = time.day.toString() + " " + months[time.month - 1] + " " + time.year.toString();
+        timeString = DateFormat("dd MMMM yyyy").format(time);
       break;
     }
 

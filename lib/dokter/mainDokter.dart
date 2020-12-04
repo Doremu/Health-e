@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
+import 'package:intl/intl.dart';
 
 class mainDokter extends StatefulWidget {
   @override
@@ -16,7 +18,8 @@ class _HomeDokterState extends State<mainDokter> {
   
   dynamic data;
   String email;
-  String printData = "";
+  List<DocumentSnapshot> consules = new List<DocumentSnapshot>();
+  Map<String, String> namaPasien = new Map<String, String>();
   var list;
   @override
   void initState() {
@@ -42,30 +45,18 @@ class _HomeDokterState extends State<mainDokter> {
     });
     email = user.email;
 
-    // CollectionReference consuleref = _firestore.collection('consules');
-    // List<QuerySnapshot> consules = new List<QuerySnapshot>();
-    // consuleref.getDocuments().then((doc) => {
-    //   consules.add(doc),
-    //   print("APAAAA $doc"),
-    //   printData += doc.toString() + "\n"
-    // });
+    QuerySnapshot querySnapshot = await Firestore.instance.collection("consules").where('emailDokter', isEqualTo: email).getDocuments();
+    setState(() {
+      consules = querySnapshot.documents;
+    });
 
-    QuerySnapshot querySnapshot = await Firestore.instance.collection("consules").getDocuments();
-    for (int i = 0; i < querySnapshot.documents.length; i++) {
-      var a = querySnapshot.documents[i]['emailDokter'];
-      print(a);
-      printData += a + "\n";
-    }
-    // list = querySnapshot.documents;
-
-    // _firestore.collection("consules").getDocuments().then((querySnapshot) {
-    //   querySnapshot.documents.forEach((result) {
-    //     print("NANIIII ${result['emailDokter']}");
-    //
-    //   });
-    // });
-
-
+    consules.forEach((consule) async {
+      await _firestore.collection('users').document(consule['uidPasien']).get().then((DocumentSnapshot snapshot) => {
+        print(snapshot['firstname'] + " " + snapshot['lastname']),
+        namaPasien[consule.documentID] =  snapshot['firstname'] + " " + snapshot['lastname']
+      });
+    });
+    setState(() {});
 
   }
   
@@ -80,26 +71,76 @@ class _HomeDokterState extends State<mainDokter> {
       body: Container(
         color: Colors.white,
         padding: EdgeInsets.all(10.0),
-        child: ListView(
-          children: <Widget>[
-            Center(
-              child: Column(
-                children: <Widget>[
-                  // _temperature(),
-                   _pasien(),
-                  // _content(),
-                  _logout()
-                ],
+        child: Column(
+          children: [
+            // _temperature(),
+              Expanded(
+                child: _pasienList(),
               ),
-            )
+            // _content(),
+            _logout()
           ],
         ),
-      ),
+      )
     );
   }
 
-  Widget _pasien() {
-    return Text(printData);
+  Widget _pasienList() {
+    List<Widget> widgets = new List<Widget>();
+    consules.forEach((consule) {
+      DateTime consuleDateTime = DateTime.fromMillisecondsSinceEpoch(consule['tanggal'].seconds * 1000);
+      String consuleDate = DateFormat('dd MMMM yyyy - kk:mm').format(consuleDateTime);
+      widgets.add(
+        Card(
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Text(
+                  "${consule['keluhan']}",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                Padding(padding: EdgeInsets.only(top: 16.0)),
+                Text(
+                  "${namaPasien[consule.documentID]}",
+                  textAlign: TextAlign.left,
+                ),
+                Padding(padding: EdgeInsets.only(top: 4.0)),
+                Text(
+                  "$consuleDate",
+                  textAlign: TextAlign.left,
+                ),
+                Padding(padding: EdgeInsets.only(top: 8.0)),
+                Image.network(consule['imageUrl'].toString()),
+                Padding(padding: EdgeInsets.only(top: 16.0)),
+                InkWell(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    width: double.infinity,
+                    child: Text(
+                      'Beri Resep & Hasil EMR',
+                      style: TextStyle(color: ColorPalette.primaryColor),
+                      textAlign: TextAlign.center,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ),
+                  onTap: () async {
+                  },
+                )
+              ],
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+            )
+          )
+        )
+      );
+    });
+    return ListView(children: widgets);
   }
 
   Widget _logout() {
@@ -120,7 +161,7 @@ class _HomeDokterState extends State<mainDokter> {
       onTap: () async {
         // Navigator.pop(context);
         await FirebaseAuth.instance.signOut();
-        Navigator.pushNamed(context, "/");
+        Navigator.pop(context);
       },
     );
   }
