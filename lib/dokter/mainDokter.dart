@@ -58,8 +58,8 @@ class _HomeDokterState extends State<MainDokter> {
         print(snapshot['firstname'] + " " + snapshot['lastname']),
         namaPasien[consule.documentID] =  snapshot['firstname'] + " " + snapshot['lastname']
       });
+      setState(() {});
     });
-    setState(() {});
 
   }
   
@@ -73,7 +73,7 @@ class _HomeDokterState extends State<MainDokter> {
       ),
       body: Container(
         color: Colors.white,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(20.0),
         child: Column(
           children: [
               Expanded(
@@ -150,7 +150,7 @@ class _HomeDokterState extends State<MainDokter> {
                       onTap: () async {
                         Navigator.push(context, 
                           MaterialPageRoute(
-                            builder: (context) => ResepDokter()
+                            builder: (context) => ResepDokter(consule)
                           )
                         );
                       },
@@ -173,7 +173,7 @@ class _HomeDokterState extends State<MainDokter> {
                       onTap: () async {
                         Navigator.push(context, 
                           MaterialPageRoute(
-                            builder: (context) => EmrDokter()
+                            builder: (context) => EmrDokter(consule)
                           )
                         );
                       },

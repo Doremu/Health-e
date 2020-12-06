@@ -26,7 +26,6 @@ class _DetailDokterState extends State<DetailDokter> {
     getPatientName();
   }
 
-
   getPatientName() async {
     await _firestore.collection('users').document(widget.consule['uidPasien']).get().then((DocumentSnapshot snapshot) => {
       print(snapshot['firstname'] + " " + snapshot['lastname']),
@@ -39,12 +38,12 @@ class _DetailDokterState extends State<DetailDokter> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: Text('Halo dokter!'),
+        title: Text('Detail'),
         automaticallyImplyLeading: false,
       ),
       body: Container(
         color: Colors.white,
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(20.0),
         child: Card(
           child: Padding(
             padding: EdgeInsets.all(20.0),
