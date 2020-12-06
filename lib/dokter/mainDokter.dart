@@ -4,14 +4,17 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
+import 'package:healthe/dokter/detailDokter.dart';
+import 'package:healthe/dokter/emrDokter.dart';
+import 'package:healthe/dokter/resepDokter.dart';
 import 'package:intl/intl.dart';
 
-class mainDokter extends StatefulWidget {
+class MainDokter extends StatefulWidget {
   @override
   _HomeDokterState createState() => _HomeDokterState();
 }
 
-class _HomeDokterState extends State<mainDokter> {
+class _HomeDokterState extends State<MainDokter> {
   
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
@@ -73,11 +76,9 @@ class _HomeDokterState extends State<mainDokter> {
         padding: EdgeInsets.all(10.0),
         child: Column(
           children: [
-            // _temperature(),
               Expanded(
-                child: _pasienList(),
+                child: _pasienList(context),
               ),
-            // _content(),
             _logout()
           ],
         ),
@@ -85,7 +86,7 @@ class _HomeDokterState extends State<mainDokter> {
     );
   }
 
-  Widget _pasienList() {
+  Widget _pasienList(BuildContext context) {
     List<Widget> widgets = new List<Widget>();
     consules.forEach((consule) {
       DateTime consuleDateTime = DateTime.fromMillisecondsSinceEpoch(consule['tanggal'].seconds * 1000);
@@ -97,31 +98,23 @@ class _HomeDokterState extends State<mainDokter> {
             child: Column(
               children: [
                 Text(
-                  "${consule['keluhan']}",
+                  "${namaPasien[consule.documentID]}",
                   style: TextStyle(
                     fontSize: 18.0,
                   ),
                   textAlign: TextAlign.left,
                 ),
-                Padding(padding: EdgeInsets.only(top: 16.0)),
-                Text(
-                  "${namaPasien[consule.documentID]}",
-                  textAlign: TextAlign.left,
-                ),
-                Padding(padding: EdgeInsets.only(top: 4.0)),
+                Padding(padding: EdgeInsets.only(top: 8.0)),
                 Text(
                   "$consuleDate",
                   textAlign: TextAlign.left,
                 ),
-                Padding(padding: EdgeInsets.only(top: 8.0)),
-                Image.network(consule['imageUrl'].toString()),
                 Padding(padding: EdgeInsets.only(top: 16.0)),
                 InkWell(
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                    width: double.infinity,
+                    padding: EdgeInsets.all(4.0),
                     child: Text(
-                      'Beri Resep & Hasil EMR',
+                      'Cek Detail',
                       style: TextStyle(color: ColorPalette.primaryColor),
                       textAlign: TextAlign.center,
                     ),
@@ -131,8 +124,62 @@ class _HomeDokterState extends State<mainDokter> {
                     ),
                   ),
                   onTap: () async {
+                    Navigator.push(context, 
+                      MaterialPageRoute(
+                        builder: (context) => DetailDokter(consule)
+                      )
+                    );
                   },
-                )
+                ),
+                Padding(padding: EdgeInsets.only(top: 8.0)),
+                Row(children: [
+                  Expanded(child: 
+                    InkWell(
+                      child: Container(
+                        padding: EdgeInsets.all(4.0),
+                        child: Text(
+                          'Beri Resep',
+                          style: TextStyle(color: ColorPalette.primaryColor),
+                          textAlign: TextAlign.center,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                      onTap: () async {
+                        Navigator.push(context, 
+                          MaterialPageRoute(
+                            builder: (context) => ResepDokter()
+                          )
+                        );
+                      },
+                    ),
+                  ),
+                  Expanded(child: 
+                    InkWell(
+                      child: Container(
+                        padding: EdgeInsets.all(4.0),
+                        child: Text(
+                          'Beri Hasil EMR',
+                          style: TextStyle(color: ColorPalette.primaryColor),
+                          textAlign: TextAlign.center,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                      onTap: () async {
+                        Navigator.push(context, 
+                          MaterialPageRoute(
+                            builder: (context) => EmrDokter()
+                          )
+                        );
+                      },
+                    ),
+                  ),
+                ],)
               ],
               crossAxisAlignment: CrossAxisAlignment.stretch,
             )

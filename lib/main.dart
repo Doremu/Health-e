@@ -1,6 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:healthe/dokter/mainDokter.dart';
+import 'package:healthe/dokter/MainDokter.dart';
 import 'package:healthe/login/login.dart';
 import 'package:healthe/login/register.dart';
 import 'package:healthe/main/consule.dart';
@@ -24,7 +24,7 @@ void main() {
       '/personaldocument' : (context) => PersonalDocument(),
       '/editprofile' : (context) => EditProfile(),
       '/consuleform' : (context) => ConsuleForm(),
-      '/dokter' : (context) => mainDokter(),
+      '/dokter' : (context) => MainDokter(),
     },
   ));
 }
