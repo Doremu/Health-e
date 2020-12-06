@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:healthe/constants.dart';
 import 'package:intl/intl.dart';
 
@@ -90,6 +91,12 @@ class _ResepDokterState extends State<ResepDokter> {
                 onSaved: (String value){
                   namaObat[i] = value;
                 },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Harap isi nama obat';
+                  }
+                  return null;
+                },
               ),
               Padding(padding: EdgeInsets.only(top: 16.0)),
               Align(
@@ -105,6 +112,12 @@ class _ResepDokterState extends State<ResepDokter> {
                 onSaved: (String value){
                   deskripsiObat[i] = value;
                 },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Harap isi deskripsi obat';
+                  }
+                  return null;
+                },
               ),
               Padding(padding: EdgeInsets.only(top: 16.0)),
               Align(
@@ -119,6 +132,16 @@ class _ResepDokterState extends State<ResepDokter> {
                 autofocus: false,
                 onSaved: (String value){
                   durasiObat[i] = value;
+                },
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ], // Only nu
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Harap isi durasi waktu obat';
+                  }
+                  return null;
                 },
               ),
             ])

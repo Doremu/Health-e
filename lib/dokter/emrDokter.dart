@@ -80,6 +80,12 @@ class _EmrDokterState extends State<EmrDokter> {
           onSaved: (String value){
             hasilEmr = value;
           },
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Harap isi penyakit yang diderita';
+            }
+            return null;
+          },
         ),
         Padding(padding: EdgeInsets.only(top: 16.0))
       ],
