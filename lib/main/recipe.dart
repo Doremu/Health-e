@@ -1,5 +1,5 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
@@ -11,50 +11,28 @@ class Recipe extends StatefulWidget {
   _RecipeState createState() => _RecipeState();
 }
 class _RecipeState extends State<Recipe> {
-  List<Recipe> _recipeList = new List();
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
-  Query _recipeQuery;
+  List<DocumentSnapshot> recipes = new List<DocumentSnapshot>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Firestore _firestore = Firestore.instance;
 
   @override
   void initState() {
     super.initState();
-
-    _recipeQuery = _database
-        .reference()
-        .child("resep")
-        .orderByChild("userId");
-    // .equalTo(widget.userId);
-
-
-
+    getUserDoc();
   }
 
-  onEntryAdded(Event event) {
-    setState(() {
-      // _recipeList.add(Recipe.fromSnapshot());
-    });
-  }
-
-  Map<dynamic, dynamic> values;
-  List namaObat = [];
   Future<dynamic> getUserDoc() async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    if(_auth.currentUser() == null){
+      Navigator.pushNamed(context, '/login');
+    }
+
     FirebaseUser user = await _auth.currentUser();
 
-
-
-
-
-    // final databaseReference = FirebaseDatabase.instance.reference().child('documents/' + user.uid);
-    // databaseReference.once().then((DataSnapshot snapshot){
-    //   Map<dynamic, dynamic> values = snapshot.value;
-    //   values.forEach((key,values) {
-    //     print(values["namaObat"]);
-    //     namaObat = values["namaObat"];
-    //   });
-    // });
-
-
+    QuerySnapshot querySnapshot = await Firestore.instance.collection("resep").where('uidPasien', isEqualTo: user.uid).getDocuments();
+    setState(() {
+      recipes = querySnapshot.documents;
+    });
 
   }
 
@@ -85,8 +63,8 @@ class _RecipeState extends State<Recipe> {
   }
 
   Widget _recipeWidget() {
-    //bool isEmpty = true;
-    bool isEmpty = false;
+    List<Widget> widgets = new List<Widget>();
+    bool isEmpty = recipes.length == 0;
     if(isEmpty)
       return Column(
         children: [
@@ -106,15 +84,19 @@ class _RecipeState extends State<Recipe> {
           Spacer(),
         ]
       );
-    else
+    else{
+      recipes.forEach((recipe) {
+        DateTime recipeDateTime = DateTime.fromMillisecondsSinceEpoch(recipe['tanggal'].seconds * 1000);
+        widgets.add(
+          _recipeSingle(recipe['namaObat'],recipe['deskripsiObat'],recipeDateTime),
+        );
+      });
+
       return ListView(
-        children: [
-          _recipeSingle("${namaObat}","Obat Pilek",new DateTime.utc(2021,04,26)),
-          _recipeSingle("Contramag","Obat Maag",new DateTime.utc(2020,12,29)),
-          _recipeSingle("Xerdob","Obat Flu",new DateTime.utc(2020,12,4)),
-        ],
+        children: widgets,
         padding: EdgeInsets.only(left: 20, right: 20, top: 10),
       );
+    }
   }
 
   Widget _recipeSingle(name, category, DateTime time) {

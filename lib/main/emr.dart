@@ -1,4 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthe/constants.dart';
 import 'package:healthe/main.dart';
@@ -9,6 +11,31 @@ class Emr extends StatefulWidget {
   _EmrState createState() => _EmrState();
 }
 class _EmrState extends State<Emr> {
+  List<DocumentSnapshot> emrs = new List<DocumentSnapshot>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Firestore _firestore = Firestore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserDoc();
+  }
+
+  Future<dynamic> getUserDoc() async {
+
+    if(_auth.currentUser() == null){
+      Navigator.pushNamed(context, '/login');
+    }
+
+    FirebaseUser user = await _auth.currentUser();
+
+    QuerySnapshot querySnapshot = await Firestore.instance.collection("emr").where('uidPasien', isEqualTo: user.uid).getDocuments();
+    setState(() {
+      emrs = querySnapshot.documents;
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,8 +63,8 @@ class _EmrState extends State<Emr> {
   }
 
   Widget _emrWidget() {
-    //bool isEmpty = true;
-    bool isEmpty = false;
+    List<Widget> widgets = new List<Widget>();
+    bool isEmpty = emrs.length == 0;
     if(isEmpty)
       return Column(
         children: [
@@ -60,22 +87,19 @@ class _EmrState extends State<Emr> {
         ],
         mainAxisAlignment: MainAxisAlignment.center
       );
-    else
+    else{
+      emrs.forEach((emr) {
+        DateTime emrDateTime = DateTime.fromMillisecondsSinceEpoch(emr['tanggal'].seconds * 1000);
+        widgets.add(
+          _emrSingle(emrDateTime,emr['hasilEmr']),
+        );
+      });
+
       return ListView(
-        children: [
-          _emrSingle(new DateTime.utc(2020,11,26), "Deskripsi 1"),
-          _emrSingle(new DateTime.utc(2020,11,25), "Deskripsi 2"),
-          _emrSingle(new DateTime.utc(2020,11,24), "Deskripsi 3"),
-          _emrSingle(new DateTime.utc(2020,11,20), "Deskripsi 4"),
-          _emrSingle(new DateTime.utc(2020,10,15), "Deskripsi 5"),
-          _emrSingle(new DateTime.utc(2020,9,15), "Deskripsi 6"),
-          _emrSingle(new DateTime.utc(2020,8,15), "Deskripsi 7"),
-          _emrSingle(new DateTime.utc(2020,7,15), "Deskripsi 8"),
-          _emrSingle(new DateTime.utc(2020,6,15), "Deskripsi 9"),
-          _emrSingle(new DateTime.utc(2020,5,15), "Deskripsi 10"),
-        ],
+        children: widgets,
         padding: EdgeInsets.only(left: 20, right: 20, top: 10),
       );
+    }
   }
 
   Widget _verifyData() {
