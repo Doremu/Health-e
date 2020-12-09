@@ -81,8 +81,6 @@ class _EmrState extends State<Emr> {
             'Daftarkan dirimu segera untuk dapat kami periksa lebih lanjut',
             textAlign: TextAlign.center,
           ),
-          Padding(padding: EdgeInsets.only(top: 32.0)),
-          _verifyData(),
           Spacer(),
         ],
         mainAxisAlignment: MainAxisAlignment.center
