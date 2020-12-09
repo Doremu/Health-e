@@ -112,7 +112,7 @@ class _HomeState extends State<Home> {
     /// Get everything from midnight until now
     DateTime endDate = DateTime.now();
     // DateTime startDate = DateTime(2020, 11, 24);
-    DateTime startDate = endDate.subtract(new Duration(hours: 50));
+    DateTime startDate = endDate.subtract(new Duration(hours: 24));
 
     HealthFactory health = HealthFactory();
 
