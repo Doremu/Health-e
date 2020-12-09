@@ -104,7 +104,7 @@ class _ConsuleFormState extends State<ConsuleForm> {
           key: formKey,
           child: ListView(
             children: [
-              _inputDropdown("Doktor"),
+              _inputDropdown("Dokter"),
               _inputText("Keluhan"),
               _inputAttachment("Lampiran (tidak wajib)"),
               _btnSubmit()
