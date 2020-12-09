@@ -53,7 +53,7 @@ class _ProfileState extends State<Profile> {
     getHeight = data['HEIGHT'];
     height = getHeight.toStringAsFixed(2);
     getWeight = data['WEIGHT'];
-    weight = '' + getWeight.toString();
+    weight = '' + getWeight.toStringAsFixed(2);
     getBmi = data['BODY_MASS_INDEX'];
     bmi = '' + getBmi.toStringAsFixed(2);
     // heartbeat = '' + getHeartbeat.toString();
@@ -93,7 +93,7 @@ class _ProfileState extends State<Profile> {
             fit: BoxFit.fill
           ),
           onTap: () {
-            Navigator.pushNamed(context, "/editprofile");
+            //Navigator.pushNamed(context, "/editprofile");
           }
         ),
         Padding(padding: EdgeInsets.only(top: 16.0)),

@@ -26,12 +26,13 @@ class _ConsuleFormState extends State<ConsuleForm> {
   final databaseReference = Firestore.instance;
   final formKey = GlobalKey<FormState>();
 
-  String _valDokter;
+  String namaDokter = '';
   String emailDokter = '';
   String keluhan = '';
   String imageUrl = '';
   String uidPasien = '';
-  List dokter = [];
+  List listNamaDokter = [];
+  List listEmailDokter = [];
   void initState() {
     super.initState();
     getUserDoc();
@@ -82,12 +83,13 @@ class _ConsuleFormState extends State<ConsuleForm> {
     FirebaseUser user = await _auth.currentUser();
     DocumentReference namaref = _firestore.collection('role').document('doctor');
     await namaref.get().then<dynamic>(( DocumentSnapshot snapshot) async{
-      setState(() {
-        data =snapshot.data;
-      });
+      data =snapshot.data;
+      setState(() {});
     });
+    listNamaDokter.add(data['nama']);
+    listEmailDokter.add(data['email']);
+    namaDokter = data['nama'];
     emailDokter = data['email'];
-    dokter.add(emailDokter);
   }
 
   @override
@@ -143,10 +145,12 @@ class _ConsuleFormState extends State<ConsuleForm> {
           alignment: Alignment.centerLeft,
           child: Text(label)
         ),
+        Text(namaDokter),
+        Text(emailDokter),
         DropdownButton(
           hint: Text("Pilih Dokter"),
-          value: _valDokter,
-          items: dokter.map((value) {
+          value: namaDokter,
+          items: listNamaDokter.map((value) {
             return DropdownMenuItem(
                 child: Text(value),
                 value: value,
@@ -154,7 +158,8 @@ class _ConsuleFormState extends State<ConsuleForm> {
           }).toList(),
           onChanged: (value) {
             setState(() {
-              _valDokter = value;
+              namaDokter = value;
+              emailDokter = listEmailDokter[listNamaDokter.indexOf(value)];
             });
           },
           isExpanded: true,
@@ -212,7 +217,7 @@ class _ConsuleFormState extends State<ConsuleForm> {
         ),
       ),
       onTap: () async {
-        await uploadImageToFirebase(context);
+        if(_imageFile != null) await uploadImageToFirebase(context);
 
         formKey.currentState.save();
         if(formKey.currentState.validate()){
