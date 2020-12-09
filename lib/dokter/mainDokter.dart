@@ -164,7 +164,7 @@ class _HomeDokterState extends State<MainDokter> {
                         child: Container(
                           padding: EdgeInsets.all(4.0),
                           child: Text(
-                            'Beri Hasil EMR',
+                            'Beri Hasil Diagnosa',
                             style: TextStyle(color: ColorPalette.primaryColor),
                             textAlign: TextAlign.center,
                           ),

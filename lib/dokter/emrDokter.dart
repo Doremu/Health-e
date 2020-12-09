@@ -51,7 +51,7 @@ class _EmrDokterState extends State<EmrDokter> {
           key: formKey,
           child: ListView(
             children: [
-              Text("Beri hasil EMR ke " + namaPasien),
+              Text("Beri hasil diagnosa ke " + namaPasien),
               _inputText("Hasil"),
               _btnSubmit()
             ]
@@ -73,7 +73,7 @@ class _EmrDokterState extends State<EmrDokter> {
         TextFormField(
           maxLines: 8,
           decoration: const InputDecoration(
-            hintText: "Tulis hasil EMR di sini",
+            hintText: "Tulis hasil diagnosa di sini",
             hintStyle: TextStyle(color: ColorPalette.hintColor),
           ),
           autofocus: false,
