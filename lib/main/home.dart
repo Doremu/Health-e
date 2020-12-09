@@ -189,6 +189,7 @@ class _HomeState extends State<Home> {
   String nama = '';
   double getHeartbeat = 0;
   String heartbeat = '0';
+  String temp = '0';
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -205,7 +206,7 @@ class _HomeState extends State<Home> {
               child: Column(
                 children: <Widget>[
                   // _temperature(),
-                  _heartBeat(),
+                  _fetchCard(),
                   // _device(),
                   _content()
                 ],
@@ -291,8 +292,7 @@ class _HomeState extends State<Home> {
 
     return _contentNotFetched();
   }
-  Widget _heartBeat() {
-    String a = 'x';
+  Widget _fetchCard() {
     return Column(
       children: <Widget>[
         Padding(padding: EdgeInsets.only(top: 30.0),),
@@ -305,23 +305,10 @@ class _HomeState extends State<Home> {
             child: Column(
               children: <Widget>[
                 Padding(padding: EdgeInsets.only(top: 30.0),),
-                ListTile(
-                  title: Text(
-                    "$heartbeat",
-                    style: TextStyle(
-                    fontSize: 30.0,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  subtitle: const Text(
-                    'Beats per minute',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                Row(children: [
+                  _profileStat("Beats per minute", heartbeat),
+                  _profileStat("Temperature (C)", temp),
+                ],),
                 Padding(padding: EdgeInsets.only(top: 30.0),),
               ],
 
@@ -335,6 +322,20 @@ class _HomeState extends State<Home> {
       ],
     );
   }
+
+  Widget _profileStat(name, value) {
+    return Expanded(
+      child: Center(
+        child: Column(
+          children: [
+            Text(value, style: TextStyle(fontSize: 36.0)),
+            Text(name, style: TextStyle(fontSize: 12.0))
+          ]
+        )
+      )
+    );
+  }
+
   Widget _device() {
     return Column(
       children: <Widget>[
