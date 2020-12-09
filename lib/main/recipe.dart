@@ -82,7 +82,8 @@ class _RecipeState extends State<Recipe> {
             textAlign: TextAlign.center,
           ),
           Spacer(),
-        ]
+        ],
+        mainAxisAlignment: MainAxisAlignment.center
       );
     else{
       recipes.forEach((recipe) {

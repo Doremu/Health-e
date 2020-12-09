@@ -174,7 +174,9 @@ class _LoginState extends State<LoginPage> {
                   if (email == 'apayajaapaya@gmail.com') {
                     Navigator.pushNamed(context, "/dokter");
                   }
-                  else Navigator.pushNamed(context, "/main");
+                  else{
+                    Navigator.pushNamed(context, "/main");
+                  }
                   // i am just showing toast message here
                 }
               } catch (error) {
