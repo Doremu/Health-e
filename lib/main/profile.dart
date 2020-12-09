@@ -209,7 +209,8 @@ class _ProfileState extends State<Profile> {
       onTap: () async {
         // Navigator.pop(context);
         await FirebaseAuth.instance.signOut();
-        Navigator.pushNamed(context, "/");
+        // Navigator.pushNamed(context, "/");
+        Navigator.pushReplacementNamed(context, '/');
       },
     );
   }

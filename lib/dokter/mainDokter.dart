@@ -208,7 +208,8 @@ class _HomeDokterState extends State<MainDokter> {
       onTap: () async {
         // Navigator.pop(context);
         await FirebaseAuth.instance.signOut();
-        Navigator.pop(context);
+        // Navigator.pop(context);
+        Navigator.pushReplacementNamed(context, '/');
       },
     );
   }
