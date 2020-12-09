@@ -18,6 +18,7 @@ class _ProfileState extends State<Profile> {
   String weight = '';
   String bmi = '';
   String temp = '';
+  String umur = '';
   @override
   void initState() {
     super.initState();
@@ -52,6 +53,8 @@ class _ProfileState extends State<Profile> {
     weight = data['WEIGHT'].toStringAsFixed(1);
     bmi = data['BODY_MASS_INDEX'].toStringAsFixed(2);
     temp = data['BODY_TEMPERATURE'].toStringAsFixed(1);
+    if(height == "0") umur = "0";
+    else umur = "21";
     // heartbeat = '' + getHeartbeat.toString();
     // return ref;
   }
@@ -113,7 +116,7 @@ class _ProfileState extends State<Profile> {
       children: [
         Row(
           children: <Widget>[
-            _profileStat("Umur","21"),
+            _profileStat("Umur",umur),
             _profileStat("Tinggi (cm)", height),
             _profileStat("Berat (kg)", weight),
             _profileStat("Suhu Badan (C)", temp),
@@ -148,7 +151,6 @@ class _ProfileState extends State<Profile> {
                 Column(
                   children: [
                     Text("Nilai BMI"),
-                    Text("Normal"),
                   ]
                 ),
                 Expanded(
