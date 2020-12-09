@@ -23,6 +23,7 @@ class _HomeDokterState extends State<MainDokter> {
   String email;
   List<DocumentSnapshot> consules = new List<DocumentSnapshot>();
   Map<String, String> namaPasien = new Map<String, String>();
+  Map<String, bool> tempHidden = new Map<String, bool>();
   var list;
   @override
   void initState() {
@@ -48,19 +49,19 @@ class _HomeDokterState extends State<MainDokter> {
     });
     email = user.email;
 
-    QuerySnapshot querySnapshot = await Firestore.instance.collection("consules").where('emailDokter', isEqualTo: email).getDocuments();
-    setState(() {
+    QuerySnapshot querySnapshot = await _firestore.collection("consules").where('emailDokter', isEqualTo: email).getDocuments();
+    setState(() {   
       consules = querySnapshot.documents;
     });
 
     consules.forEach((consule) async {
       await _firestore.collection('users').document(consule['uidPasien']).get().then((DocumentSnapshot snapshot) => {
         print(snapshot['firstname'] + " " + snapshot['lastname']),
-        namaPasien[consule.documentID] =  snapshot['firstname'] + " " + snapshot['lastname']
+        namaPasien[consule.documentID] = snapshot['firstname'] + " " + snapshot['lastname'],
+        tempHidden[consule.documentID] = false
       });
       setState(() {});
     });
-
   }
   
   @override
@@ -92,96 +93,122 @@ class _HomeDokterState extends State<MainDokter> {
       DateTime consuleDateTime = DateTime.fromMillisecondsSinceEpoch(consule['tanggal'].seconds * 1000);
       String consuleDate = DateFormat('dd MMMM yyyy - kk:mm').format(consuleDateTime);
       widgets.add(
-        Card(
-          child: Padding(
-            padding: EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                Text(
-                  "${namaPasien[consule.documentID]}",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                Padding(padding: EdgeInsets.only(top: 8.0)),
-                Text(
-                  "$consuleDate",
-                  textAlign: TextAlign.left,
-                ),
-                Padding(padding: EdgeInsets.only(top: 16.0)),
-                InkWell(
-                  child: Container(
-                    padding: EdgeInsets.all(4.0),
-                    child: Text(
-                      'Cek Detail',
-                      style: TextStyle(color: ColorPalette.primaryColor),
-                      textAlign: TextAlign.center,
+        Visibility(visible: !consule.data.containsKey('hidden') && tempHidden[consule.documentID] == false,
+          child:
+          Card(
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  Text(
+                    "${namaPasien[consule.documentID]}",
+                    style: TextStyle(
+                      fontSize: 18.0,
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
+                    textAlign: TextAlign.left,
                   ),
-                  onTap: () async {
-                    Navigator.push(context, 
-                      MaterialPageRoute(
-                        builder: (context) => DetailDokter(consule)
-                      )
-                    );
-                  },
-                ),
-                Padding(padding: EdgeInsets.only(top: 8.0)),
-                Row(children: [
-                  Expanded(child: 
-                    InkWell(
-                      child: Container(
-                        padding: EdgeInsets.all(4.0),
-                        child: Text(
-                          'Beri Resep',
-                          style: TextStyle(color: ColorPalette.primaryColor),
-                          textAlign: TextAlign.center,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
+                  Padding(padding: EdgeInsets.only(top: 8.0)),
+                  Text(
+                    "$consuleDate",
+                    textAlign: TextAlign.left,
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 16.0)),
+                  InkWell(
+                    child: Container(
+                      padding: EdgeInsets.all(4.0),
+                      child: Text(
+                        'Cek Detail',
+                        style: TextStyle(color: ColorPalette.primaryColor),
+                        textAlign: TextAlign.center,
                       ),
-                      onTap: () async {
-                        Navigator.push(context, 
-                          MaterialPageRoute(
-                            builder: (context) => ResepDokter(consule)
-                          )
-                        );
-                      },
-                    ),
-                  ),
-                  Expanded(child: 
-                    InkWell(
-                      child: Container(
-                        padding: EdgeInsets.all(4.0),
-                        child: Text(
-                          'Beri Hasil EMR',
-                          style: TextStyle(color: ColorPalette.primaryColor),
-                          textAlign: TextAlign.center,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
-                      onTap: () async {
-                        Navigator.push(context, 
-                          MaterialPageRoute(
-                            builder: (context) => EmrDokter(consule)
-                          )
-                        );
-                      },
                     ),
+                    onTap: () async {
+                      Navigator.push(context, 
+                        MaterialPageRoute(
+                          builder: (context) => DetailDokter(consule)
+                        )
+                      );
+                    },
                   ),
-                ],)
-              ],
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+                  Padding(padding: EdgeInsets.only(top: 16.0)),
+                  Row(children: [
+                    Expanded(child: 
+                      InkWell(
+                        child: Container(
+                          padding: EdgeInsets.all(4.0),
+                          child: Text(
+                            'Beri Resep',
+                            style: TextStyle(color: ColorPalette.primaryColor),
+                            textAlign: TextAlign.center,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        onTap: () async {
+                          Navigator.push(context, 
+                            MaterialPageRoute(
+                              builder: (context) => ResepDokter(consule)
+                            )
+                          );
+                        },
+                      ),
+                    ),
+                    Expanded(child: 
+                      InkWell(
+                        child: Container(
+                          padding: EdgeInsets.all(4.0),
+                          child: Text(
+                            'Beri Hasil EMR',
+                            style: TextStyle(color: ColorPalette.primaryColor),
+                            textAlign: TextAlign.center,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        onTap: () async {
+                          Navigator.push(context, 
+                            MaterialPageRoute(
+                              builder: (context) => EmrDokter(consule)
+                            )
+                          );
+                        },
+                      ),
+                    ),
+                  ],),
+                  Padding(padding: EdgeInsets.only(top: 16.0)),
+                  InkWell(
+                    child: Container(
+                      padding: EdgeInsets.all(4.0),
+                      child: Text(
+                        'Selesai',
+                        style: TextStyle(color: ColorPalette.primaryColor),
+                        textAlign: TextAlign.center,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                    onTap: () async {
+                      await _firestore.collection("consules").document(consule.documentID).updateData({
+                        'hidden': true
+                      });
+                      setState(() {
+                        tempHidden[consule.documentID] = true;
+                      });
+                    },
+                  ),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+              )
             )
           )
         )
