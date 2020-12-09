@@ -12,14 +12,12 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   dynamic data;
-  String nama;
-  String email;
-  double getHeight;
-  String height;
-  double getWeight;
-  String weight;
-  double getBmi;
-  String bmi;
+  String nama = '';
+  String email = '';
+  String height = '';
+  String weight = '';
+  String bmi = '';
+  String temp = '';
   @override
   void initState() {
     super.initState();
@@ -50,12 +48,10 @@ class _ProfileState extends State<Profile> {
         data =snapshot.data;
       });
     });
-    getHeight = data['HEIGHT'];
-    height = getHeight.toStringAsFixed(2);
-    getWeight = data['WEIGHT'];
-    weight = '' + getWeight.toStringAsFixed(2);
-    getBmi = data['BODY_MASS_INDEX'];
-    bmi = '' + getBmi.toStringAsFixed(2);
+    height = (data['HEIGHT'] * 100).toStringAsFixed(0);
+    weight = data['WEIGHT'].toStringAsFixed(1);
+    bmi = data['BODY_MASS_INDEX'].toStringAsFixed(2);
+    temp = data['BODY_TEMPERATURE'].toStringAsFixed(1);
     // heartbeat = '' + getHeartbeat.toString();
     // return ref;
   }
@@ -118,9 +114,9 @@ class _ProfileState extends State<Profile> {
         Row(
           children: <Widget>[
             _profileStat("Umur","21"),
-            _profileStat("Tinggi (m)", "${height}"),
-            _profileStat("Berat (kg)", "${weight}"),
-            _profileStat("Gol. Darah","B"),
+            _profileStat("Tinggi (cm)", height),
+            _profileStat("Berat (kg)", weight),
+            _profileStat("Suhu Badan (C)", temp),
           ]
         ),
         Padding(padding: EdgeInsets.only(top: 16.0))
@@ -134,7 +130,7 @@ class _ProfileState extends State<Profile> {
         child: Column(
           children: [
             Text(value, style: TextStyle(fontSize: 36.0)),
-            Text(name)
+            Text(name, style: TextStyle(fontSize: 10.0))
           ]
         )
       )

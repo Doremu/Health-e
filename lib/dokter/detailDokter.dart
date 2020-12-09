@@ -19,7 +19,7 @@ class _DetailDokterState extends State<DetailDokter> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
   String namaPasien = "";
-  String height = "", weight = "", heartRate = "", bmi = "";
+  String height = "", weight = "", heartRate = "", bmi = "", temp = "";
   var scanPasien;
 
   @override
@@ -34,10 +34,11 @@ class _DetailDokterState extends State<DetailDokter> {
     });
     setState(() {});
     await _firestore.collection('scan').document(widget.consule['uidPasien']).get().then((DocumentSnapshot snapshot) => {
-      height = snapshot['HEIGHT'].toStringAsFixed(2),
-      weight = snapshot['WEIGHT'].toStringAsFixed(2),
+      height = (snapshot['HEIGHT'] * 100).toStringAsFixed(0),
+      weight = snapshot['WEIGHT'].toStringAsFixed(1),
       heartRate = snapshot['HEART_RATE'].toStringAsFixed(0),
       bmi = snapshot['BODY_MASS_INDEX'].toStringAsFixed(2),
+      temp = snapshot['BODY_TEMPERATURE'].toStringAsFixed(1)
     });
     setState(() {});
   }
@@ -116,16 +117,16 @@ class _DetailDokterState extends State<DetailDokter> {
         Row(
           children: <Widget>[
             _profileStat("Umur","21"),
-            _profileStat("Tinggi (m)", height),
+            _profileStat("Tinggi (cm)", height),
             _profileStat("Berat (kg)", weight),
           ]
         ),
         Padding(padding: EdgeInsets.only(top: 16.0)),
         Row(
           children: <Widget>[
-            _profileStat("Gol. Darah","B"),
             _profileStat("Heart Rate", heartRate),
             _profileStat("BMI", bmi),
+            _profileStat("Suhu Badan (C)", temp),
           ]
         ),
       ]
