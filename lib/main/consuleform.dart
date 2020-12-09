@@ -145,8 +145,6 @@ class _ConsuleFormState extends State<ConsuleForm> {
           alignment: Alignment.centerLeft,
           child: Text(label)
         ),
-        Text(namaDokter),
-        Text(emailDokter),
         DropdownButton(
           hint: Text("Pilih Dokter"),
           value: namaDokter,
