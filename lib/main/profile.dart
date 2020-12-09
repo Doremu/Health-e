@@ -40,7 +40,7 @@ class _ProfileState extends State<Profile> {
         data =snapshot.data;
       });
     });
-    nama = data['firstname'] + data['lastname'];
+    nama = data['firstname'] + ' ' + data['lastname'];
     email = user.email;
     DocumentReference heartref = _firestore.collection('scan').document(user.uid);
     await heartref.get().then<dynamic>(( DocumentSnapshot snapshot) async{

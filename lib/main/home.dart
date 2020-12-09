@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
       Navigator.pushNamed(context, '/login');
     }
     else if(user.email == 'apayaajaapaya@gmail.com') {
-      Navigator.pushNamed(context, "/dokter");
+      Navigator.pushReplacementNamed(context, "/dokter");
     }
   }
 
@@ -76,7 +76,7 @@ class _HomeState extends State<Home> {
         Navigator.pushNamed(context, "/login");
       }
       else if(user.email == 'apayaajaapaya@gmail.com') {
-        Navigator.pushNamed(context, "/dokter");
+        Navigator.pushReplacementNamed(context, "/dokter");
       }
     });
 
@@ -307,7 +307,7 @@ class _HomeState extends State<Home> {
                 Padding(padding: EdgeInsets.only(top: 30.0),),
                 ListTile(
                   title: Text(
-                    heartbeat,
+                    "$heartbeat",
                     style: TextStyle(
                     fontSize: 30.0,
                     ),
@@ -315,7 +315,7 @@ class _HomeState extends State<Home> {
                   ),
 
                   subtitle: const Text(
-                    'Hearts Beat',
+                    'Beats per minute',
                     style: TextStyle(
                       fontSize: 20.0,
                     ),

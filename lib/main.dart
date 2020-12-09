@@ -58,11 +58,11 @@ class _BottomNavBar extends State<BottomNavBar> {
           backgroundColor: Colors.white,
           key: _bottomNavigationKey,
           items: <Widget>[
-            Image.asset('assets/icon/stethoscope.png', width: 30,),
-            Icon(Icons.assignment_outlined, size: 30),
-            Icon(Icons.home, size: 30),
-            Icon(Icons.library_add, size: 30),
-            Icon(Icons.account_circle, size: 30),
+            Icon(Icons.medical_services_outlined, size: 30, color: Colors.white,),
+            Icon(Icons.assignment_outlined, size: 30, color: Colors.white,),
+            Icon(Icons.home_outlined, size: 30, color: Colors.white,),
+            Icon(Icons.history, size: 30, color: Colors.white,),
+            Icon(Icons.account_circle_outlined, size: 30, color: Colors.white,),
           ],
           index: 2,
           animationDuration: Duration(

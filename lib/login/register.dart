@@ -117,31 +117,31 @@ class RegisterPage extends StatelessWidget with Validation{
             autofocus: false,
           ),
           Padding(padding: EdgeInsets.only(top: 12.0),),
-          TextFormField(
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: ColorPalette.underlineTextField,
-                    width: 1.5
-                ),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                    color: Colors.white,
-                    width: 3.0
-                ),
-              ),
-              hintText: "Username",
-              hintStyle: TextStyle(color: ColorPalette.hintColor),
-            ),
-            onSaved: (String value){
-              username = value;
-            },
-            style: TextStyle(color: Colors.white),
-            autofocus: false,
-          ),
-          Padding(padding: EdgeInsets.only(top: 12.0),),
+          // TextFormField(
+          //   decoration: const InputDecoration(
+          //     border: UnderlineInputBorder(),
+          //     enabledBorder: UnderlineInputBorder(
+          //       borderSide: BorderSide(
+          //           color: ColorPalette.underlineTextField,
+          //           width: 1.5
+          //       ),
+          //     ),
+          //     focusedBorder: UnderlineInputBorder(
+          //       borderSide: BorderSide(
+          //           color: Colors.white,
+          //           width: 3.0
+          //       ),
+          //     ),
+          //     hintText: "Username",
+          //     hintStyle: TextStyle(color: ColorPalette.hintColor),
+          //   ),
+          //   onSaved: (String value){
+          //     username = value;
+          //   },
+          //   style: TextStyle(color: Colors.white),
+          //   autofocus: false,
+          // ),
+          // Padding(padding: EdgeInsets.only(top: 12.0),),
           TextFormField(
             keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(
