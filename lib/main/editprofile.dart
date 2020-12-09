@@ -17,17 +17,17 @@ class _EditProfileState extends State<EditProfile> {
       ),
       body: new Container(
         padding: EdgeInsets.all(20.0),
-        child: ListView(
-          children: [
-            _inputText("Nama Lengkap", "Fransiskus Aprilion Aric"),
-            _inputDropdownCalendar("Tanggal Lahir"),
-            _inputRadios("Jenis Kelamin",["Laki-laki", "Perempuan"]),
-            _inputText("Tinggi Badan (cm)", "170"),
-            _inputText("Berat Badan (kg)", "60"),
-            _inputRadios("Golongan Darah",["A", "B", "AB", "O"]),
-            _inputText("Nomor Telepon", "081234567890"),
-            _inputText("Alamat", "???"),
-          ]
+        child: Expanded(
+          child: ListView(
+            children: [
+              _inputText("Nama Lengkap", ""),
+              _inputDropdownCalendar("Tanggal Lahir"),
+              _inputRadios("Jenis Kelamin",["Laki-laki", "Perempuan"]),
+              _inputRadios("Golongan Darah",["A", "B", "AB", "O"]),
+              _inputText("Nomor Telepon", ""),
+              _inputText("Alamat", ""),
+            ]
+          )
         )
       )
     );

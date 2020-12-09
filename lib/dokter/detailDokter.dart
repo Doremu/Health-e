@@ -19,6 +19,9 @@ class _DetailDokterState extends State<DetailDokter> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
   String namaPasien = "";
+  String height = "";
+  String weight = "";
+  var scanPasien;
 
   @override
   void initState() {
@@ -28,8 +31,12 @@ class _DetailDokterState extends State<DetailDokter> {
 
   getPatientName() async {
     await _firestore.collection('users').document(widget.consule['uidPasien']).get().then((DocumentSnapshot snapshot) => {
-      print(snapshot['firstname'] + " " + snapshot['lastname']),
       namaPasien =  snapshot['firstname'] + " " + snapshot['lastname']
+    });
+    setState(() {});
+    await _firestore.collection('scan').document(widget.consule['uidPasien']).get().then((DocumentSnapshot snapshot) => {
+      height = snapshot['HEIGHT'].toStringAsFixed(2),
+      weight = snapshot['WEIGHT'].toStringAsFixed(2)
     });
     setState(() {});
   }
@@ -49,26 +56,33 @@ class _DetailDokterState extends State<DetailDokter> {
             padding: EdgeInsets.all(20.0),
             child: Column(
               children: [
-                Text(
-                  namaPasien,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                Padding(padding: EdgeInsets.only(top: 4.0)),
-                Text(
-                  _dateFromTimeStamp(widget.consule['tanggal']),
-                  textAlign: TextAlign.left,
-                ),
-                Padding(padding: EdgeInsets.only(top: 12.0)),
-                Text(
-                  widget.consule['keluhan'],
-                  textAlign: TextAlign.left,
-                ),
+                Expanded(child:
+                ListView(
+                  children: [
+                    Text(
+                      namaPasien,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 4.0)),
+                    Text(
+                      _dateFromTimeStamp(widget.consule['tanggal']),
+                      textAlign: TextAlign.left,
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 16.0)),
+                    _profileStats(),
+                    Padding(padding: EdgeInsets.only(top: 16.0)),
+                    Text(
+                      widget.consule['keluhan'],
+                      textAlign: TextAlign.left,
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 8.0)),
+                    Image.network(widget.consule['imageUrl']),
+                  ],
+                ),),
                 Padding(padding: EdgeInsets.only(top: 8.0)),
-                Image.network(widget.consule['imageUrl']),
-                Spacer(),
                 InkWell(
                   child: Container(
                     padding: EdgeInsets.all(4.0),
@@ -90,6 +104,34 @@ class _DetailDokterState extends State<DetailDokter> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
             ),
           )
+        )
+      )
+    );
+  }
+
+  Widget _profileStats() {
+    return Column(
+      children: [
+        Row(
+          children: <Widget>[
+            _profileStat("Umur","21"),
+            _profileStat("Tinggi (m)", height),
+            _profileStat("Berat (kg)", weight),
+            _profileStat("Gol. Darah","B"),
+          ]
+        ),
+      ]
+    );
+  }
+
+  Widget _profileStat(name, value) {
+    return Expanded(
+      child: Center(
+        child: Column(
+          children: [
+            Text(value, style: TextStyle(fontSize: 24.0)),
+            Text(name, style: TextStyle(fontSize: 12.0))
+          ]
         )
       )
     );
